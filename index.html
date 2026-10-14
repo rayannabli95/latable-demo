@@ -94,14 +94,18 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 .objets img{position:absolute;width:25%;height:auto;opacity:0;filter:drop-shadow(0 10px 14px rgba(0,0,0,.55));will-change:transform,opacity}
 /* l'interface sort du téléphone · un élément vivant par étape */
 .vifs{position:relative;flex:1;min-width:0;max-width:250px;height:var(--ht)}
-.vif{position:absolute;left:0;right:0;bottom:6%;display:grid;gap:10px;opacity:0;will-change:opacity,transform}
-.verre{background:rgba(18,16,20,.7);-webkit-backdrop-filter:blur(16px) saturate(1.3);backdrop-filter:blur(16px) saturate(1.3);border:1px solid rgba(255,255,255,.16);border-radius:18px;padding:12px 13px}
+.vif{position:absolute;left:0;right:0;top:0;display:grid;gap:10px;opacity:0;will-change:opacity,transform}
+.verre{background:rgba(11,10,13,.8);-webkit-backdrop-filter:blur(18px) saturate(1.2);backdrop-filter:blur(18px) saturate(1.2);border-radius:16px;padding:12px 14px;box-shadow:0 12px 30px rgba(0,0,0,.35)}
+/* les jeux rangés dans une carte · plus rien ne flotte sur la photo */
+.grille-jeux{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-top:9px;align-items:center}
+.grille-jeux span{font:400 1.1875rem/1 var(--fa);color:var(--rose);text-align:center}
+.grille-jeux img{width:100%;height:auto}
 .petit{font:700 .75rem/1.15 var(--fd);letter-spacing:.05em;text-transform:uppercase;color:#e4dfe5}
 .puce{display:flex;align-items:center;gap:8px;font:700 .95rem/1.15 var(--fd)}
 .puce::before{content:"";flex:none;width:8px;height:8px;border-radius:50%;background:var(--rose)}
 .choix{display:grid;gap:8px;margin-top:9px}
-.choix b{display:flex;align-items:center;justify-content:space-between;height:44px;padding:0 11px;border-radius:13px;white-space:nowrap;font:400 .75rem/1 var(--fa);text-transform:uppercase;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.16)}
-.choix button{display:flex;align-items:center;justify-content:space-between;height:44px;padding:0 11px;border-radius:13px;white-space:nowrap;font:400 .75rem/1 var(--fa);text-transform:uppercase;background:rgba(18,16,20,.7);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.2);color:var(--blanc)}
+.choix b{display:flex;align-items:center;justify-content:space-between;height:44px;padding:0 12px;border-radius:13px;white-space:nowrap;font:400 .75rem/1 var(--fa);text-transform:uppercase;background:rgba(255,255,255,.1)}
+.choix button{display:flex;align-items:center;justify-content:space-between;height:44px;padding:0 12px;border-radius:13px;white-space:nowrap;font:400 .75rem/1 var(--fa);text-transform:uppercase;background:rgba(11,10,13,.8);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);color:var(--blanc);box-shadow:0 10px 24px rgba(0,0,0,.3)}
 .choix button::after{content:"→";font:700 .95rem/1 var(--fd)}
 .choix button:active{background:var(--blanc);color:var(--encre)}
 .choix.seul{margin-top:0}
@@ -178,7 +182,7 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 @media (max-width:350px){.pied svg{display:none}.vifs{display:none}.tel-zone{justify-content:center}.halo{left:50%}.objets{left:50%;transform:translateX(-50%)}}
 @media (min-width:900px){
   /* sur ordinateur · une moitié pour le texte, une moitié pour l'image plein cadre (le film de 768 px n'y est jamais étiré) */
-  :root{--split:46vw;--gauche:max(5vw,calc(50vw - 660px));--ht:min(66svh,calc(var(--sh) - 130px),46vw,700px)}
+  :root{--split:46vw;--gauche:max(5vw,calc(50vw - 660px));--ht:min(66svh,calc(var(--sh) - 130px),38vw,700px)}
   .scene{background:var(--nuit)}
   .decor,.voile,.grain{left:var(--split);right:0;top:0;bottom:0;width:auto}
   .voile{background:linear-gradient(90deg,rgba(11,10,13,1) 0,rgba(11,10,13,.6) 8%,rgba(11,10,13,0) 24%),linear-gradient(0deg,rgba(11,10,13,.55) 0,rgba(11,10,13,0) 24%)}
@@ -186,7 +190,7 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
   .tel-zone{left:var(--split);right:0;bottom:7svh;justify-content:center;gap:0;transform-origin:50% 100%}
   .halo{left:50%}
   .objets{left:50%;transform:translateX(-50%)}
-  .vifs{position:absolute;left:min(calc(50% + var(--ht) * .13),calc(100% - 290px));bottom:0;width:250px;max-width:none;flex:none}
+  .vifs{position:absolute;left:calc(50% + var(--ht) * .234 + 16px);bottom:0;width:min(230px,calc(50% - var(--ht) * .234 - 36px));max-width:none;flex:none}
   .petit{font-size:.95rem}.puce,.notif strong,.fiche strong,.vote div,.vote span{font-size:1.1875rem}.verre{padding:15px 16px}.choix b,.choix button{font-size:.95rem;height:48px}
   .pas{right:auto;left:var(--gauche);top:12svh;width:calc(var(--split) - var(--gauche) - 3vw)}
   .pas h2{font-size:clamp(3rem,5vw,6.4rem);margin-top:1.1rem}
@@ -225,7 +229,6 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 <section class="ouverture" aria-label="LaTable">
   <div class="o-img"><img src="img/s1.jpg" alt="" fetchpriority="high"></div>
   <div class="o-txt"><p class="n">La démo</p><h1><span><span>Un QR</span></span><span><span>toute</span></span><span><span>l’expérience</span></span></h1></div>
-  <div class="o-jeux" aria-hidden="true"><img src="jeux/debat.webp" alt="" style="left:70%;top:2%;--r:-8deg;animation-delay:-0.0s"><img src="jeux/quiz.webp" alt="" style="left:82%;top:24%;--r:10deg;animation-delay:-0.7s"><img src="jeux/coupable.webp" alt="" style="left:4%;top:40%;--r:-6deg;animation-delay:-1.4s"><img src="jeux/mytho.webp" alt="" style="left:74%;top:52%;--r:8deg;animation-delay:-2.1s"><img src="jeux/intrus.webp" alt="" style="left:10%;top:70%;--r:12deg;animation-delay:-2.8s"><img src="jeux/commun.webp" alt="" style="left:80%;top:76%;--r:-10deg;animation-delay:-3.5s"><img src="jeux/miroir.webp" alt="" style="left:6%;top:84%;--r:6deg;animation-delay:-4.2s"><img src="jeux/piege.webp" alt="" style="left:58%;top:14%;--r:-12deg;animation-delay:-4.9s"></div>
   <p class="o-defile"><i></i>Faites défiler</p>
 </section>
 
@@ -271,7 +274,7 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
       <div class="vifs">
         <div class="vif" data-v="0"><div class="verre puce">Sans appli</div><div class="verre puce">Tous les téléphones</div></div>
         <div class="vif" data-v="1"><div class="verre"><p class="petit">Un seul QR</p><div class="choix"><b id="cj" data-on>Jouer</b><b id="cc">La carte</b></div></div></div>
-        <div class="vif" data-v="2"><div class="verre"><p class="petit" id="consigne">Touchez oui ou non</p><div class="vote"><div>Oui<i style="--c:#ff2d6f" id="vo"></i><span id="no">0</span></div><div>Non<i style="--c:#2f80ff" id="vn"></i><span id="nn">0</span></div></div></div></div>
+        <div class="vif" data-v="2"><div class="verre"><p class="petit">Les jeux</p><div class="grille-jeux"><img src="jeux/debat.webp" alt="" loading="lazy"><img src="jeux/quiz.webp" alt="" loading="lazy"><img src="jeux/coupable.webp" alt="" loading="lazy"><span>+6</span></div></div><div class="verre"><p class="petit" id="consigne">Touchez oui ou non</p><div class="vote"><div>Oui<i style="--c:#ff2d6f" id="vo"></i><span id="no">0</span></div><div>Non<i style="--c:#2f80ff" id="vn"></i><span id="nn">0</span></div></div></div></div>
         <div class="vif" data-v="3"><div class="verre notif"><div class="ico"><svg id="cloche" viewBox="0 0 24 24"><path d="M12 22a2.5 2.5 0 0 0 2.4-2H9.6A2.5 2.5 0 0 0 12 22zm7-6v-5a7 7 0 0 0-5.5-6.8V3.5a1.5 1.5 0 0 0-3 0v.7A7 7 0 0 0 5 11v5l-2 2v1h18v-1l-2-2z"/></svg></div><div><p class="petit">Au comptoir</p><strong>Commande n°&nbsp;55</strong></div></div></div>
         <div class="vif" data-v="4"><div class="verre"><div class="avis-g"><svg viewBox="0 0 48 48" role="img" aria-label="Google"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg><b id="note">0,0</b></div><div class="etoiles" id="etoiles"></div></div></div>
         <div class="vif" data-v="5"><div class="choix seul" id="metiers"><button type="button" tabindex="-1">Hôtel</button><button type="button" tabindex="-1">Chauffeur</button><button type="button" tabindex="-1">Coworking</button><button type="button" tabindex="-1">Loisirs</button><button type="button" tabindex="-1">Mariage</button></div></div>
@@ -406,21 +409,14 @@ window.FILMS_METIERS = [
   });
   // la caméra · d'une étape à l'autre le téléphone avance, recule ou se décale, et le décor glisse
   // [échelle du téléphone, décalage en % de la largeur, glissement du décor en %]
-  var CAM = [[1,0,0],[.9,6,-1.2],[1.05,-3,1.2],[.92,5,-1],[1,0,1],[.86,9,0],[1.05,-3,1.2],[.92,6,-1.2],[1.02,-2,1],[.9,6,-1],[1.04,0,1.2]];
+  var CAM = [[1,0,0],[.9,6,-1.2],[1.05,-3,1.2],[.92,-4,-1],[1,0,1],[.86,9,0],[1.05,-3,1.2],[.92,6,-1.2],[1.02,-2,1],[.9,6,-1],[1.04,0,1.2]];
   var telZone = document.querySelector(".tel-zone");
   // une page métier du site peut ouvrir la démo sur son chapitre · /pro/demo/#hotel
   var ANCRE = { metiers: 5, hotel: 6, chauffeur: 7, coworking: 8, loisirs: 9, mariage: 10 };
   var ancre = ANCRE[location.hash.slice(1)];
   if (ancre !== undefined) addEventListener("load", function(){ mesurer(); scrollTo(0, debut + ((ancre + .25) / N) * max); });
   // les jeux qui sortent du téléphone · [jeu, x, y, rotation] en % de la boîte du téléphone
-  var OBJETS = {
-    2: [["debat",104,2,-8],["quiz",130,4,10],["coupable",108,10,-6],["mytho",130,16,8],["intrus",104,27,-10],["commun",130,33,12],["miroir",108,44,-6],["piege",130,49,6]],
-    6: [["debat",108,2,-8],["quiz",130,14,10]],
-    7: [["mytho",108,2,8],["quiz",130,14,-8]],
-    8: [["commun",108,2,-6],["intrus",130,14,10],["miroir",116,26,-4]],
-    9: [["piege",108,2,6],["coupable",130,14,-8],["intrus",116,26,8]],
-    10: [["miroir",108,2,-6],["commun",130,14,8],["debat",116,26,-8]]
-  };
+  var OBJETS = {};   // les jeux vivent dans la carte de l'étape 03 · rien ne flotte sur les photos
   var boiteObj = $("objets"), objets = {};
   Object.keys(OBJETS).forEach(function(k){ objets[k] = OBJETS[k].map(function(o){
     var im = document.createElement("img"); im.src = "jeux/" + o[0] + ".webp"; im.alt = ""; im.loading = "lazy"; im.decoding = "async";
