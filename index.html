@@ -1,0 +1,539 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<meta name="robots" content="noindex,nofollow">
+<title>La démo LaTable</title>
+<link rel="preload" href="archivo-black-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="img/s1.jpg" as="image" fetchpriority="high">
+<!--
+THESIS · le téléphone ne bouge pas · c'est le lieu qui tourne autour de lui
+OWN-WORLD · un restaurant la nuit · noyer sombre · le rose seulement sur ce qui est LaTable
+STORY · chapitre 1 · les 5 étapes de « Ce que vit votre client » · chapitre 2 · « Et pour votre métier » · cinq lieux, le même téléphone (textes et écrans de la vitrine, mot pour mot)
+FIRST VIEWPORT · la table et le vrai QR · le téléphone avec l'écran du scan · le titre dans le calme du haut
+
+RÈGLE · le décor ne porte aucun texte · les écrans sont les vraies captures de la vitrine, posées en HTML
+RÈGLE · aucun gros plan · le décor ne dépasse jamais 1,03
+RÈGLE · l'image de repos d'une étape est la DERNIÈRE image du film qui y mène · aucun saut au raccord
+Brief et critères · docs/mondes/BRIEF_DEMO_TOP1.md
+-->
+<style>
+@font-face{font-family:"Archivo Black";src:url("archivo-black-latin.woff2") format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:"Inter";src:url("inter-latin.woff2") format("woff2");font-weight:400 800;font-display:swap}
+:root{--nuit:#0b0a0d;--rose:#ff2d6f;--blanc:#fff;--encre:#141215;--tete:69px;--pied:69px;--fa:"Archivo Black","Arial Black",Impact,sans-serif;--fd:"Inter",system-ui,sans-serif;--bord:clamp(18px,5.4vw,56px);--sh:calc(100svh - var(--tete) - var(--pied));--ht:min(56svh,calc(var(--sh) - 206px));--lueur:255,236,214}
+*{box-sizing:border-box;margin:0}
+html,body{background:var(--nuit);color:var(--blanc);font-family:var(--fd);overflow-x:clip;-webkit-text-size-adjust:100%}
+body{font-size:.95rem}
+img,video,svg{display:block}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+:focus-visible{outline:2px solid var(--rose);outline-offset:3px}
+
+.tete{position:fixed;inset:0 0 auto 0;height:var(--tete);z-index:20;background:var(--blanc);display:flex;align-items:center;justify-content:space-between;padding:0 var(--bord);border-bottom:1px solid #ececec}
+.tete .logo{color:var(--encre);fill:var(--encre);display:block}
+.tete svg{height:26px;width:auto}
+.tete a{font:700 .95rem/1 var(--fd);color:var(--encre);text-decoration:none;padding:15px 0 15px 16px}
+.pied{position:fixed;inset:auto 0 0 0;height:calc(var(--pied) + env(safe-area-inset-bottom));padding:10px var(--bord) calc(10px + env(safe-area-inset-bottom));z-index:20;background:var(--nuit);border-top:1px solid #232127}
+.pied a{display:flex;align-items:center;justify-content:center;gap:10px;height:46px;border-radius:99px;background:var(--rose);color:var(--blanc);font:800 1.1875rem/1 var(--fd);text-decoration:none;max-width:440px;margin:0 auto;box-shadow:0 4px 0 #c41650;transition:transform .12s,box-shadow .12s}
+.pied a:active{transform:translateY(3px);box-shadow:0 1px 0 #c41650}
+.pied svg{width:22px;height:22px;fill:currentColor}
+
+.piste{position:relative;height:1584svh}
+.scene{position:sticky;top:var(--tete);height:var(--sh);overflow:hidden;isolation:isolate;background:#000}
+
+/* le décor */
+.decor{position:absolute;inset:0;z-index:0;will-change:transform}
+.decor img,.decor video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 62%;opacity:0}
+.decor img[data-d="0"]{opacity:1}
+.voile{position:absolute;inset:0;z-index:1;pointer-events:none;background:
+  linear-gradient(180deg,rgba(11,10,13,.82) 0,rgba(11,10,13,.5) 20%,rgba(11,10,13,0) 42%,rgba(11,10,13,0) 78%,rgba(11,10,13,.6) 100%),
+  radial-gradient(120% 80% at 50% 60%,rgba(11,10,13,0) 55%,rgba(11,10,13,.5) 100%)}
+/* un décor clair (la nappe du mariage) · le haut se referme pour que le texte reste lisible */
+.voile::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(11,10,13,.8) 0,rgba(11,10,13,.62) 36%,rgba(11,10,13,0) 56%);opacity:0;transition:opacity .5s}
+.scene[data-clair] .voile::after{opacity:1}
+.grain{position:absolute;inset:0;z-index:8;pointer-events:none;opacity:.1;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+/* le texte · deux lignes · la seconde en rose comme le héros de la vitrine · elles montent derrière un cache */
+.pas{position:absolute;z-index:5;left:var(--bord);right:var(--bord);top:clamp(14px,2.8svh,30px);pointer-events:none}
+.pas .n{display:block;font:400 .95rem/1 var(--fa);color:var(--rose);letter-spacing:.08em;opacity:0}
+.pas h2{margin-top:.55rem;font:400 clamp(2rem,9.6vw,3.1rem)/.98 var(--fa);text-transform:uppercase;letter-spacing:.005em}
+.pas h2 .l{display:block;overflow:hidden;padding-bottom:.06em;white-space:nowrap}
+.pas h2 .l>span{display:block;will-change:transform}
+/* le texte se compose au défilement · mot par mot, au rythme des images */
+.pas .w{display:inline-block;transform:translateY(135%);will-change:transform}
+.pas .pw{display:inline-block;opacity:0}
+.pas h2 .l:last-child>span{color:var(--rose)}
+/* le chapitre des métiers · le slogan de la vitrine sur trois lignes · un cran plus petit */
+.pas.m h2{font-size:clamp(1.65rem,7.9vw,2.6rem)}
+.pas p{margin-top:.55rem;font:600 1.1875rem/1.3 var(--fd);max-width:25ch}
+
+/* le téléphone · un objet · il garde sa place, il tourne à peine, son écran se pousse comme une vraie navigation */
+.tel-zone{position:absolute;z-index:3;left:var(--bord);right:var(--bord);bottom:clamp(54px,8.6svh,70px);display:flex;align-items:flex-end;gap:clamp(10px,3.4vw,22px);pointer-events:none;perspective:1100px;transform-origin:20% 100%}
+.halo{position:absolute;left:22%;bottom:-6%;width:min(120vw,600px);aspect-ratio:1;transform:translateX(-50%);border-radius:50%;background:radial-gradient(closest-side,rgba(var(--lueur),.18),rgba(var(--lueur),0) 70%);mix-blend-mode:screen}
+.tel{position:relative;flex:none;height:var(--ht);aspect-ratio:474/1012;border-radius:12.4% / 5.8%;padding:2%;will-change:transform;
+  background:linear-gradient(135deg,#4a464f 0,#17151a 22%,#0b0a0d 60%,#2d2a32 100%);
+  box-shadow:0 0 0 1px rgba(255,255,255,.1),inset 0 0 0 1px rgba(255,255,255,.3),inset 0 0 0 2.5px #0a090b,-10px 26px 50px rgba(0,0,0,.6),-3px 8px 14px rgba(0,0,0,.55)}
+.tel-ecran{position:relative;width:100%;height:100%;border-radius:10.4% / 4.9%;overflow:hidden;background:#0c0b0e}
+.tel-ecran .e{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 0;transform:translateY(101%);will-change:transform}
+.tel-ecran .e[data-e="0"]{transform:none}
+.ombre{position:absolute;inset:0;background:#0b0a0d;opacity:0}
+.feuille{position:absolute;z-index:3;left:4%;right:4%;bottom:2%;border-radius:9%/13%;overflow:hidden;transform:translateY(120%);box-shadow:0 -14px 30px rgba(0,0,0,.5)}
+.feuille img{width:100%;height:auto}
+.zone-v{position:absolute;z-index:2;top:26%;bottom:2%;width:46%;border-radius:8%/5%;pointer-events:none}
+.zone-v[data-c="o"]{left:3%}.zone-v[data-c="n"]{right:3%}
+.zone-v:active{background:rgba(255,255,255,.28)}
+.zone-v[data-pris]{box-shadow:inset 0 0 0 3px #fff}
+.zones{position:absolute;inset:0;z-index:2;pointer-events:none}
+.reflet{position:absolute;inset:2%;border-radius:10.4% / 4.9%;pointer-events:none;overflow:hidden}
+.reflet::before{content:"";position:absolute;inset:-20% -60%;background:linear-gradient(112deg,rgba(255,255,255,0) 40%,rgba(255,255,255,.16) 49%,rgba(255,255,255,0) 58%);transform:translateX(var(--rx,-40%))}
+
+/* les jeux en objets autour du téléphone · les vrais visuels de la vitrine · ils arrivent un par un au défilement */
+.objets{position:absolute;left:0;bottom:0;height:var(--ht);aspect-ratio:474/1012;pointer-events:none;z-index:2}
+.objets img{position:absolute;width:25%;height:auto;opacity:0;filter:drop-shadow(0 10px 14px rgba(0,0,0,.55));will-change:transform,opacity}
+/* l'interface sort du téléphone · un élément vivant par étape */
+.vifs{position:relative;flex:1;min-width:0;max-width:250px;height:var(--ht)}
+.vif{position:absolute;left:0;right:0;bottom:6%;display:grid;gap:10px;opacity:0;will-change:opacity,transform}
+.verre{background:rgba(18,16,20,.7);-webkit-backdrop-filter:blur(16px) saturate(1.3);backdrop-filter:blur(16px) saturate(1.3);border:1px solid rgba(255,255,255,.16);border-radius:18px;padding:12px 13px}
+.petit{font:700 .75rem/1.15 var(--fd);letter-spacing:.05em;text-transform:uppercase;color:#e4dfe5}
+.puce{display:flex;align-items:center;gap:8px;font:700 .95rem/1.15 var(--fd)}
+.puce::before{content:"";flex:none;width:8px;height:8px;border-radius:50%;background:var(--rose)}
+.choix{display:grid;gap:8px;margin-top:9px}
+.choix b{display:flex;align-items:center;justify-content:space-between;height:44px;padding:0 11px;border-radius:13px;white-space:nowrap;font:400 .75rem/1 var(--fa);text-transform:uppercase;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.16)}
+.choix button{display:flex;align-items:center;justify-content:space-between;height:44px;padding:0 11px;border-radius:13px;white-space:nowrap;font:400 .75rem/1 var(--fa);text-transform:uppercase;background:rgba(18,16,20,.7);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.2);color:var(--blanc)}
+.choix button::after{content:"→";font:700 .95rem/1 var(--fd)}
+.choix button:active{background:var(--blanc);color:var(--encre)}
+.choix.seul{margin-top:0}
+.fiche strong{display:block;font:800 .95rem/1.2 var(--fd);margin-top:4px}
+.choix b[data-on]{background:var(--blanc);border-color:var(--blanc);color:var(--encre)}
+.choix b::after{content:"→";font:700 .95rem/1 var(--fd)}
+.vote{display:grid;gap:8px;margin-top:10px}
+.vote div{display:grid;grid-template-columns:2.4em 1fr auto;align-items:center;gap:8px;font:400 .95rem/1 var(--fa);text-transform:uppercase}
+.vote i{height:10px;border-radius:9px;background:rgba(255,255,255,.14);overflow:hidden}
+.vote i::after{content:"";display:block;height:100%;border-radius:9px;transform-origin:0 50%;transform:scaleX(var(--v,0));background:var(--c)}
+.vote span{font:800 .95rem/1 var(--fd);font-variant-numeric:tabular-nums;min-width:1ch;text-align:right}
+.notif{display:grid;grid-template-columns:30px 1fr;gap:9px;align-items:center;padding:11px 10px}
+.notif .ico{width:30px;height:30px;border-radius:9px;background:var(--encre);border:1px solid rgba(255,255,255,.2);display:grid;place-items:center}
+.notif svg{width:17px;height:17px;fill:var(--rose);transform-origin:50% 10%;transform:rotate(var(--r,0deg))}
+.notif strong{display:block;font:800 .95rem/1.2 var(--fd);margin-top:3px}
+.avis-g{display:flex;align-items:center;gap:9px}
+.avis-g svg{width:24px;height:24px;flex:none}
+.avis-g b{font:800 1.1875rem/1 var(--fd);font-variant-numeric:tabular-nums}
+.etoiles{display:flex;gap:3px;margin-top:9px}
+.etoiles svg{width:19px;height:19px;fill:rgba(255,255,255,.2)}
+.etoiles svg[data-on]{fill:#fbbc05}
+
+/* le rail · on sait où on est, et on peut y aller */
+.rail{position:absolute;z-index:7;left:var(--bord);right:var(--bord);bottom:0;height:48px;display:flex;align-items:center;gap:12px}
+.rail .cpt{font:400 .75rem/1 var(--fa);letter-spacing:.06em;font-variant-numeric:tabular-nums;white-space:nowrap}
+.rail .cpt em{font-style:normal;color:#cfc8d1}
+.rail .ligne{position:relative;flex:1;height:44px;display:flex;align-items:center}
+.rail .ligne::before{content:"";position:absolute;left:0;right:0;height:3px;border-radius:3px;background:rgba(255,255,255,.22)}
+.rail .ligne::after{content:"";position:absolute;left:0;right:0;height:3px;border-radius:3px;background:var(--rose);transform-origin:0 50%;transform:scaleX(var(--p,0))}
+.rail .ligne button{position:relative;z-index:1;flex:1;height:44px}
+.rail .ligne button::after{content:"";position:absolute;right:-1px;top:50%;width:2px;height:9px;margin-top:-4.5px;background:var(--nuit)}
+.rail .ligne button:last-child::after{display:none}
+.rail .passer{font:700 .95rem/1 var(--fd);height:44px;padding:0 0 0 4px;color:var(--blanc);text-decoration:underline;text-underline-offset:4px;display:flex;align-items:center}
+
+/* l'entrée · le décor sort du noir, le téléphone monte · une fois */
+.scene[data-entree] .decor{animation:sortir 1.1s cubic-bezier(.2,.7,.2,1) backwards}
+.scene[data-entree] .tel-zone{animation:monter 1s .15s cubic-bezier(.16,1,.3,1) backwards}
+.scene[data-entree] .rail{animation:sortir .8s .5s backwards}
+@keyframes sortir{from{opacity:0}}
+@keyframes monter{from{opacity:0;transform:translateY(70px)}}
+
+/* l'ouverture · un plan large avant le premier geste */
+.ouverture{position:relative;height:calc(100svh - var(--pied));padding-top:var(--tete);overflow:hidden;isolation:isolate}
+.o-img{position:absolute;inset:var(--tete) 0 0 0;z-index:-1}
+.o-img img{width:100%;height:100%;object-fit:cover;object-position:50% 62%;animation:approche 9s cubic-bezier(.2,.6,.2,1) both}
+.o-img::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(11,10,13,.92) 0,rgba(11,10,13,.55) 34%,rgba(11,10,13,.15) 60%,rgba(11,10,13,.85) 100%)}
+@keyframes approche{from{transform:scale(1.03)}to{transform:none}}
+.o-txt{padding:clamp(22px,5svh,48px) var(--bord) 0}
+.o-txt .n{font:400 .95rem/1 var(--fa);color:var(--rose);letter-spacing:.08em;text-transform:uppercase}
+.o-txt h1{margin-top:.7rem;font:400 clamp(2.6rem,14vw,5rem)/.94 var(--fa);text-transform:uppercase}
+.o-txt h1>span{display:block;overflow:hidden;white-space:nowrap;padding-bottom:.04em}.o-txt h1 span>span{display:block;animation:lever .9s cubic-bezier(.16,1,.3,1) both}
+.o-txt h1 span+span>span{color:var(--rose);animation-delay:.12s}
+.o-txt h1 span+span+span>span{animation-delay:.22s}
+@keyframes lever{from{transform:translateY(110%)}}
+.o-defile{position:absolute;left:var(--bord);bottom:22px;display:flex;align-items:center;gap:12px;font:700 .95rem/1 var(--fd)}
+.o-defile i{position:relative;width:2px;height:38px;background:rgba(255,255,255,.25);overflow:hidden}
+.o-defile i::after{content:"";position:absolute;left:0;top:0;width:100%;height:40%;background:var(--rose);animation:goutte 1.6s ease-in-out infinite}
+@keyframes goutte{from{transform:translateY(-100%)}to{transform:translateY(260%)}}
+.o-jeux{position:absolute;inset:38% 0 0 0;pointer-events:none}
+.o-jeux img{position:absolute;width:clamp(54px,15vw,120px);height:auto;filter:drop-shadow(0 12px 16px rgba(0,0,0,.6));animation:flotter 6s ease-in-out infinite alternate}
+@keyframes flotter{from{transform:translateY(-6px) rotate(var(--r))}to{transform:translateY(6px) rotate(calc(var(--r) * -1))}}
+/* le sommaire · sur ordinateur, il prend la place du rail */
+.sommaire{display:none}
+.suite{position:relative;z-index:2;background:var(--nuit);padding:12svh var(--bord) calc(var(--pied) + 12svh);display:grid;gap:1.4rem;justify-items:start}
+.suite-jeux{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:.4rem}
+.suite-jeux img{width:clamp(48px,11vw,84px);height:auto;filter:drop-shadow(0 8px 12px rgba(0,0,0,.5))}
+.suite h2{font:400 clamp(2.1rem,9.6vw,4.2rem)/.98 var(--fa);text-transform:uppercase;text-wrap:balance}
+.suite h2 em{font-style:normal;color:var(--rose)}
+.suite p{font:600 1.1875rem/1.4 var(--fd);max-width:30ch}
+.suite .liens{display:flex;flex-wrap:wrap;gap:12px;margin-top:.4rem}
+.suite .liens a{display:inline-flex;align-items:center;height:48px;padding:0 22px;border-radius:99px;border:1.5px solid rgba(255,255,255,.5);color:var(--blanc);font:700 .95rem/1 var(--fd);text-decoration:none}
+
+@media (min-width:600px) and (max-width:899px){:root{--ht:min(60svh,calc(var(--sh) - 320px))}.pas h2{font-size:4.2rem}.pas.m h2{font-size:3.4rem}.pas p{font-size:1.5rem}.vifs{max-width:320px}}
+@media (max-width:350px){.pied svg{display:none}.vifs{display:none}.tel-zone{justify-content:center}.halo{left:50%}.objets{left:50%;transform:translateX(-50%)}}
+@media (min-width:900px){
+  /* sur ordinateur · une moitié pour le texte, une moitié pour l'image plein cadre (le film de 768 px n'y est jamais étiré) */
+  :root{--split:46vw;--gauche:max(5vw,calc(50vw - 660px));--ht:min(66svh,calc(var(--sh) - 130px),46vw,700px)}
+  .scene{background:var(--nuit)}
+  .decor,.voile,.grain{left:var(--split);right:0;top:0;bottom:0;width:auto}
+  .voile{background:linear-gradient(90deg,rgba(11,10,13,1) 0,rgba(11,10,13,.6) 8%,rgba(11,10,13,0) 24%),linear-gradient(0deg,rgba(11,10,13,.55) 0,rgba(11,10,13,0) 24%)}
+  .voile::after{display:none}
+  .tel-zone{left:var(--split);right:0;bottom:7svh;justify-content:center;gap:0;transform-origin:50% 100%}
+  .halo{left:50%}
+  .objets{left:50%;transform:translateX(-50%)}
+  .vifs{position:absolute;left:min(calc(50% + var(--ht) * .13),calc(100% - 290px));bottom:0;width:250px;max-width:none;flex:none}
+  .petit{font-size:.95rem}.puce,.notif strong,.fiche strong,.vote div,.vote span{font-size:1.1875rem}.verre{padding:15px 16px}.choix b,.choix button{font-size:.95rem;height:48px}
+  .pas{right:auto;left:var(--gauche);top:12svh;width:calc(var(--split) - var(--gauche) - 3vw)}
+  .pas h2{font-size:clamp(3rem,5vw,6.4rem);margin-top:1.1rem}
+  .pas.m h2{font-size:clamp(2.4rem,4.1vw,5rem)}
+  .pas .n{font-size:1.1875rem}
+  .rail{display:none}
+  .sommaire{display:grid;grid-template-columns:1fr 1fr;gap:0 4vw;position:absolute;z-index:6;left:var(--gauche);bottom:6svh;width:calc(var(--split) - var(--gauche) - 3vw)}
+  .sommaire h3{font:400 .75rem/1 var(--fa);letter-spacing:.08em;text-transform:uppercase;color:var(--rose);margin-bottom:10px}
+  .sommaire button{display:flex;align-items:center;gap:12px;width:100%;min-height:32px;text-align:left;font:600 .95rem/1.2 var(--fd);color:rgba(255,255,255,.55);transition:color .3s}
+  .sommaire button b{font:400 .75rem/1 var(--fa);width:2.2em;color:inherit}
+  .sommaire button::before{content:"";width:0;height:2px;background:var(--rose);transition:width .3s;order:2}
+  .sommaire button[aria-current]{color:var(--blanc)}
+  .sommaire button[aria-current]::before{width:22px}
+  .sommaire button:hover{color:var(--blanc)}
+  .ouverture{display:grid;grid-template-columns:var(--split) 1fr}
+  .o-img{left:var(--split)}
+  .o-jeux{inset:var(--tete) 0 0 var(--split)}
+  .o-img::after{background:linear-gradient(90deg,rgba(11,10,13,1) 0,rgba(11,10,13,0) 30%),linear-gradient(0deg,rgba(11,10,13,.6) 0,rgba(11,10,13,0) 30%)}
+  .o-txt{padding:0 0 0 var(--gauche);align-self:center}
+  .o-txt h1{font-size:clamp(3.6rem,7vw,8.4rem)}
+  .o-defile{left:var(--gauche);bottom:6svh}
+  .suite{grid-template-columns:1fr 1fr;align-items:center;padding-left:var(--gauche);padding-right:var(--gauche);column-gap:5vw}
+  .suite-jeux{grid-column:2;grid-row:1 / span 4;display:grid;grid-template-columns:repeat(4,1fr);gap:2vw}
+  .suite-jeux img{width:100%}
+}
+@media (prefers-reduced-motion:reduce){
+  .o-img img,.o-txt h1 span>span,.o-jeux img,.o-defile i::after{animation:none}
+  .scene[data-entree] .decor,.scene[data-entree] .tel-zone,.scene[data-entree] .rail{animation:none}
+}
+</style>
+</head>
+<body>
+<header class="tete"><span class="logo" id="logo" role="img" aria-label="LaTable"></span><a href="https://www.latable.pro/">Le site</a></header>
+<nav class="pied"><a href="https://wa.me/33749581271"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2z"/><path d="M16.6 14.1c-.3-.1-1.500-.7-1.700-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1-1.400-.7-2.500-1.600-3.300-2.900-.2-.4.2-.4.6-1.200.1-.2 0-.3 0-.5l-.8-1.800c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.9.9-1 2.100-.3 3.500 1.100 2 2.600 3.400 4.600 4.300 2.100.9 2.600.7 3.600.3.600-.3 1.100-.9 1.200-1.400.1-.3.1-.5-.2-.6z"/></svg>Nous écrire sur WhatsApp</a></nav>
+
+<section class="ouverture" aria-label="LaTable">
+  <div class="o-img"><img src="img/s1.jpg" alt="" fetchpriority="high"></div>
+  <div class="o-txt"><p class="n">La démo</p><h1><span><span>Un QR</span></span><span><span>toute</span></span><span><span>l’expérience</span></span></h1></div>
+  <div class="o-jeux" aria-hidden="true"><img src="jeux/debat.webp" alt="" style="left:70%;top:2%;--r:-8deg;animation-delay:-0.0s"><img src="jeux/quiz.webp" alt="" style="left:82%;top:24%;--r:10deg;animation-delay:-0.7s"><img src="jeux/coupable.webp" alt="" style="left:4%;top:40%;--r:-6deg;animation-delay:-1.4s"><img src="jeux/mytho.webp" alt="" style="left:74%;top:52%;--r:8deg;animation-delay:-2.1s"><img src="jeux/intrus.webp" alt="" style="left:10%;top:70%;--r:12deg;animation-delay:-2.8s"><img src="jeux/commun.webp" alt="" style="left:80%;top:76%;--r:-10deg;animation-delay:-3.5s"><img src="jeux/miroir.webp" alt="" style="left:6%;top:84%;--r:6deg;animation-delay:-4.2s"><img src="jeux/piege.webp" alt="" style="left:58%;top:14%;--r:-12deg;animation-delay:-4.9s"></div>
+  <p class="o-defile"><i></i>Faites défiler</p>
+</section>
+
+<main class="piste" id="piste">
+  <div class="scene" id="scene" data-entree>
+    <div class="decor" id="decor">
+      <img data-d="0" src="img/s1.jpg" alt="Une table de restaurant la nuit avec le QR LaTable posé près d'un verre" fetchpriority="high">
+      <img data-d="1" src="img/fin1.jpg" alt="Des amis autour de la table leur téléphone à la main" loading="lazy">
+      <img data-d="2" src="img/fin2.jpg" alt="Le comptoir du restaurant avec un plateau et un écran" loading="lazy">
+      <img data-d="3" src="img/fin3.jpg" alt="La table après le repas dans une lumière chaude" loading="lazy">
+      <img data-d="4" src="img/m1.jpg" alt="Une chambre d'hôtel la nuit avec sa lampe de chevet" loading="lazy">
+      <img data-d="5" src="img/m2.jpg" alt="L'intérieur d'une berline vu de la banquette arrière" loading="lazy">
+      <img data-d="6" src="img/m3.jpg" alt="La grande table d'un coworking avec des ordinateurs fermés" loading="lazy">
+      <img data-d="7" src="img/m4.jpg" alt="Une table basse devant les pistes d'un bowling" loading="lazy">
+      <img data-d="8" src="img/m5.jpg" alt="Une table de mariage dressée avec des bougies" loading="lazy">
+    </div>
+    <div class="voile"></div>
+
+    <div class="tel-zone">
+      <div class="halo"></div>
+      <div class="tel" id="tel">
+        <div class="tel-ecran" id="ecrans">
+          <img class="e" data-e="0" src="ecrans/ecran-scan.webp" alt="">
+          <img class="e" data-e="1" src="ecrans/ecran-choix.webp" alt="">
+          <img class="e" data-e="2" src="ecrans/ecran-jeu-debat.webp" alt="">
+          <img class="e" data-e="3" src="ecrans/ecran-paye.webp" alt="">
+          <img class="e" data-e="4" src="ecrans/ecran-hotel-choix.webp" alt="" loading="lazy">
+          <img class="e" data-e="5" src="ecrans/ecran-hotel-infos.webp" alt="" loading="lazy">
+          <img class="e" data-e="6" src="ecrans/ecran-chauffeur-choix.webp" alt="" loading="lazy">
+          <img class="e" data-e="7" src="ecrans/ecran-chauffeur-contact.webp" alt="" loading="lazy">
+          <img class="e" data-e="8" src="ecrans/ecran-coworking-choix.webp" alt="" loading="lazy">
+          <img class="e" data-e="9" src="ecrans/ecran-coworking-infos.webp" alt="" loading="lazy">
+          <img class="e" data-e="10" src="ecrans/ecran-jeu-menu.webp" alt="" loading="lazy">
+          <img class="e" data-e="11" src="ecrans/ecran-mariage-choix.webp" alt="" loading="lazy">
+          <img class="e" data-e="12" src="ecrans/ecran-mariage-infos.webp" alt="" loading="lazy">
+          <div class="zones" id="zones"><button type="button" class="zone-v" data-c="o" aria-label="Voter oui" tabindex="-1"></button><button type="button" class="zone-v" data-c="n" aria-label="Voter non" tabindex="-1"></button></div>
+          <div class="ombre" id="ombre"></div>
+          <div class="feuille" id="feuille"><img src="ecrans/carte-avis.webp" alt=""></div>
+        </div>
+        <div class="reflet" id="reflet"></div>
+      </div>
+      <div class="objets" id="objets" aria-hidden="true"></div>
+      <div class="vifs">
+        <div class="vif" data-v="0"><div class="verre puce">Sans appli</div><div class="verre puce">Tous les téléphones</div></div>
+        <div class="vif" data-v="1"><div class="verre"><p class="petit">Un seul QR</p><div class="choix"><b id="cj" data-on>Jouer</b><b id="cc">La carte</b></div></div></div>
+        <div class="vif" data-v="2"><div class="verre"><p class="petit" id="consigne">Touchez oui ou non</p><div class="vote"><div>Oui<i style="--c:#ff2d6f" id="vo"></i><span id="no">0</span></div><div>Non<i style="--c:#2f80ff" id="vn"></i><span id="nn">0</span></div></div></div></div>
+        <div class="vif" data-v="3"><div class="verre notif"><div class="ico"><svg id="cloche" viewBox="0 0 24 24"><path d="M12 22a2.5 2.5 0 0 0 2.4-2H9.6A2.5 2.5 0 0 0 12 22zm7-6v-5a7 7 0 0 0-5.5-6.8V3.5a1.5 1.5 0 0 0-3 0v.7A7 7 0 0 0 5 11v5l-2 2v1h18v-1l-2-2z"/></svg></div><div><p class="petit">Au comptoir</p><strong>Commande n°&nbsp;55</strong></div></div></div>
+        <div class="vif" data-v="4"><div class="verre"><div class="avis-g"><svg viewBox="0 0 48 48" role="img" aria-label="Google"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg><b id="note">0,0</b></div><div class="etoiles" id="etoiles"></div></div></div>
+        <div class="vif" data-v="5"><div class="choix seul" id="metiers"><button type="button" tabindex="-1">Hôtel</button><button type="button" tabindex="-1">Chauffeur</button><button type="button" tabindex="-1">Coworking</button><button type="button" tabindex="-1">Loisirs</button><button type="button" tabindex="-1">Mariage</button></div></div>
+        <div class="vif" data-v="6"><div class="verre fiche"><p class="petit">Le Wi-Fi</p><strong>Copié en un geste</strong></div></div>
+        <div class="vif" data-v="7"><div class="verre fiche"><p class="petit">Une course</p><strong>Réservée sur WhatsApp</strong></div></div>
+        <div class="vif" data-v="8"><div class="verre fiche"><p class="petit">L’agenda</p><strong>L’afterwork du jeudi</strong></div></div>
+        <div class="vif" data-v="9"><div class="verre fiche"><p class="petit">Avant le créneau</p><strong>La salle d’attente joue</strong></div></div>
+        <div class="vif" data-v="10"><div class="verre fiche"><p class="petit">Les photos du jour</p><strong>Partagées par les invités</strong></div></div>
+      </div>
+    </div>
+
+    <section class="pas" data-p="0"><span class="n">01</span><h2><span class="l"><span>Il scanne</span></span><span class="l"><span>votre QR</span></span></h2></section>
+    <section class="pas" data-p="1"><span class="n">02</span><h2><span class="l"><span>Votre lieu</span></span><span class="l"><span>s'ouvre</span></span></h2></section>
+    <section class="pas" data-p="2"><span class="n">03</span><h2><span class="l"><span>La table</span></span><span class="l"><span>joue</span></span></h2></section>
+    <section class="pas" data-p="3"><span class="n">04</span><h2><span class="l"><span>Il commande</span></span><span class="l"><span>de sa table</span></span></h2></section>
+    <section class="pas" data-p="4"><span class="n">05</span><h2><span class="l"><span>Il laisse</span></span><span class="l"><span>un avis</span></span></h2></section>
+    <section class="pas" data-p="5"><span class="n">Et aussi</span><h2><span class="l"><span>Et pour</span></span><span class="l"><span>votre métier</span></span></h2></section>
+    <section class="pas m" data-p="6"><span class="n">Hôtel</span><h2><span class="l"><span>Tout l’hôtel</span></span><span class="l"><span>dans leur</span></span><span class="l"><span>poche</span></span></h2></section>
+    <section class="pas m" data-p="7"><span class="n">Chauffeur VTC</span><h2><span class="l"><span>Votre fiche</span></span><span class="l"><span>contact</span></span><span class="l"><span>en un scan</span></span></h2></section>
+    <section class="pas m" data-p="8"><span class="n">Coworking</span><h2><span class="l"><span>Vos membres</span></span><span class="l"><span>se rencontrent</span></span><span class="l"><span>enfin</span></span></h2></section>
+    <section class="pas m" data-p="9"><span class="n">Loisirs</span><h2><span class="l"><span>L’attente</span></span><span class="l"><span>devient</span></span><span class="l"><span>un jeu</span></span></h2></section>
+    <section class="pas m" data-p="10"><span class="n">Mariage</span><h2><span class="l"><span>Les invités</span></span><span class="l"><span>jouent entre</span></span><span class="l"><span>deux plats</span></span></h2></section>
+
+    <nav class="sommaire" id="sommaire" aria-label="Le sommaire de la démo"></nav>
+    <nav class="rail" aria-label="Les étapes">
+      <span class="cpt"><b id="cpt" style="font-weight:400">01</b> <em id="sur">/ 05</em></span>
+      <div class="ligne" id="ligne">
+      </div>
+      <a class="passer" href="#suite">Passer</a>
+    </nav>
+    <div class="grain"></div>
+  </div>
+</main>
+
+<section class="suite" id="suite">
+  <div class="suite-jeux" aria-hidden="true"><img src="jeux/debat.webp" alt="" loading="lazy"><img src="jeux/quiz.webp" alt="" loading="lazy"><img src="jeux/coupable.webp" alt="" loading="lazy"><img src="jeux/mytho.webp" alt="" loading="lazy"><img src="jeux/intrus.webp" alt="" loading="lazy"><img src="jeux/commun.webp" alt="" loading="lazy"><img src="jeux/miroir.webp" alt="" loading="lazy"><img src="jeux/piege.webp" alt="" loading="lazy"></div>
+  <h2>Votre QR peut faire <em>bien plus</em></h2>
+  <p>On vous montre tout en dix minutes sur WhatsApp</p>
+  <div class="liens"><a href="https://www.latable.pro/pro/tarifs/">Voir les formules</a><a href="https://www.latable.pro/pro/jeux/">Les 9 jeux</a></div>
+</section>
+
+<script>
+// les traversées · { de: étape de départ (0 = 01), src } · le scroll les lit image par image
+window.FILMS = [
+  { de: 1, src: "film/t1.mp4" },
+  { de: 2, src: "film/t2.mp4" },
+  { de: 3, src: "film/t3.mp4" }
+];
+// le chapitre des métiers · ajoutés quand ils sont tournés · sans eux la page fond d'un décor à l'autre
+window.FILMS_METIERS = [
+  { de: 5, src: "film/m1.mp4" },
+  { de: 6, src: "film/m2.mp4" }
+];
+</script>
+<script>
+(function(){
+  var N = 11, REPOS = .6;                              // une étape · repos de 0 à .6 · passage de .6 à 1
+  var DECOR = [0,0,1,2,3,3,4,5,6,7,8];
+  // un ou deux vrais écrans par étape · le second se pousse au milieu du repos
+  var ECRAN = [[0],[1],[2],[3],[3],[0],[4,5],[6,7],[8,9],[10,2],[11,12]];
+  // deux chapitres · le rail montre celui où l'on est
+  var CHAP = [{ de: 0, noms: ["il scanne","votre lieu s'ouvre","la table joue","il commande","il laisse un avis"] },
+              { de: 5, noms: ["et pour votre métier","hôtel","chauffeur","coworking","loisirs","mariage"] }];
+  // la lumière que chaque écran jette sur la scène
+  var LUEUR = ["255,236,214","255,255,255","255,244,246","255,255,255","255,226,190","255,236,214","255,240,244","255,240,244","255,240,244","255,244,246","255,240,244"];
+  window.FILMS = (window.FILMS || []).concat(window.FILMS_METIERS || []);
+  var mq = matchMedia("(prefers-reduced-motion: reduce)"), calme = mq.matches;
+  if (mq.addEventListener) mq.addEventListener("change", function(e){ calme = e.matches; });
+  var econome = !!(navigator.connection && navigator.connection.saveData);
+  var $ = function(i){ return document.getElementById(i); };
+  var piste = $("piste"), scene = $("scene"), decor = $("decor"), tel = $("tel"), reflet = $("reflet"), feuille = $("feuille"), ombre = $("ombre");
+  var imgs = [].slice.call(decor.querySelectorAll("img")), ecrans = [].slice.call(document.querySelectorAll("#ecrans .e"));
+  var pas = [].slice.call(document.querySelectorAll(".pas")).map(function(el){ var l = [].slice.call(el.querySelectorAll(".l>span"));
+    // chaque mot devient une pièce · le titre se monte derrière son cache, la phrase s'écrit
+    var mots = function(boite, cls){ var t = boite.textContent.trim().split(/\s+/); boite.innerHTML = t.map(function(m){ return '<span class="' + cls + '">' + m + '</span>'; }).join(" "); return [].slice.call(boite.children); };
+    var w = []; l.forEach(function(sp){ w = w.concat(mots(sp, "w")); });
+    var pp = el.querySelector("p"), pw = pp ? mots(pp, "pw") : [];
+    return { el: el, l: l, w: w, pw: pw, n: el.querySelector(".n"), p: el.querySelector("p") }; });
+  var vifs = [].slice.call(document.querySelectorAll(".vif"));
+  var boutons = [], ligne = $("ligne"), cpt = $("cpt"), sur = $("sur"), zonesBoite = $("zones");
+  var fiches = vifs.map(function(el){ return el.querySelector("[data-2]"); });
+  var racine = document.documentElement;
+
+  function ajuster(){
+    [].slice.call(document.querySelectorAll(".pas h2, .o-txt h1")).forEach(function(t){
+      t.style.fontSize = ""; var w = t.clientWidth, plus = 0;
+      [].slice.call(t.children).forEach(function(l){ plus = Math.max(plus, l.scrollWidth); });
+      if (plus > w) t.style.fontSize = (parseFloat(getComputedStyle(t).fontSize) * w / plus * .98) + "px";
+    });
+  }
+  (document.fonts ? document.fonts.ready : Promise.resolve()).then(ajuster); addEventListener("resize", ajuster);
+  fetch("logo.svg").then(function(r){ return r.text(); }).then(function(s){ $("logo").innerHTML = s; }).catch(function(){ $("logo").textContent = "LaTable"; });
+  var et = $("etoiles"); for (var s = 0; s < 5; s++) et.insertAdjacentHTML("beforeend", '<svg viewBox="0 0 24 24"><path d="M12 2l3 6.3 6.9.9-5 4.8 1.2 6.9L12 17.6 5.9 20.9l1.2-6.9-5-4.800 6.900-.900z"/></svg>');
+  var etoiles = [].slice.call(et.children);
+  setTimeout(function(){ scene.removeAttribute("data-entree"); }, 1800);
+
+  // les films · créés quand on approche, jamais tous à l'ouverture
+  var films = {};
+  function film(k){
+    if (films[k] || calme || econome) return;
+    var f = (window.FILMS || []).filter(function(x){ return x.de === k; })[0]; if (!f) return;
+    var v = document.createElement("video"); v.muted = true; v.playsInline = true; v.preload = "auto"; v.tabIndex = -1; v.setAttribute("aria-hidden","true"); v.src = f.src;
+    decor.appendChild(v); films[k] = v;
+  }
+  var pret = function(v){ return v && v.readyState >= 2 && v.duration > 0; };
+
+  var lisse = function(a,b,x){ var t = Math.min(1, Math.max(0,(x-a)/(b-a))); return t*t*(3-2*t); };
+  var max = 1, debut = 0, cible = 0, pos = 0, avant = 0;
+  // la piste commence après l'ouverture · le scroll ne compte qu'à partir du moment où la scène se colle
+  function lire(){ cible = Math.max(0, Math.min(1, (scrollY - debut) / max)); }
+  function mesurer(){ debut = piste.offsetTop - scene.offsetTop - parseFloat(getComputedStyle(scene).top); max = Math.max(1, piste.offsetHeight - scene.offsetHeight); lire(); }
+  addEventListener("scroll", lire, { passive:true }); addEventListener("resize", mesurer); mesurer();
+  var aller = function(k, u){ scrollTo({ top: debut + ((k + u) / N) * max, behavior: calme ? "auto" : "smooth" }); };
+  var chapVu = -1;
+  function chapitre(c){
+    chapVu = c; var ch = CHAP[c]; ligne.innerHTML = "";
+    boutons = ch.noms.map(function(nom, k){
+      var b = document.createElement("button"); b.type = "button"; b.setAttribute("aria-label", "Étape " + (k + 1) + ", " + nom);
+      b.addEventListener("click", function(){ aller(ch.de + k, .25); }); ligne.appendChild(b); return b;
+    });
+    sur.textContent = "/ 0" + ch.noms.length;
+  }
+  chapitre(0);
+  // le sommaire de l'ordinateur · les deux chapitres côte à côte, chaque ligne mène à son étape
+  var sommaire = $("sommaire"), lignes = [];
+  [["Votre client", 0], ["Votre métier", 1]].forEach(function(t){
+    var col = document.createElement("div"); col.innerHTML = "<h3>" + t[0] + "</h3>"; var ch = CHAP[t[1]];
+    ch.noms.forEach(function(nom, k){ var b = document.createElement("button"); b.type = "button";
+      b.innerHTML = "<b>0" + (k + 1) + "</b>" + nom.charAt(0).toUpperCase() + nom.slice(1);
+      b.addEventListener("click", function(){ aller(ch.de + k, .25); }); col.appendChild(b); lignes[ch.de + k] = b; });
+    sommaire.appendChild(col);
+  });
+  // la caméra · d'une étape à l'autre le téléphone avance, recule ou se décale, et le décor glisse
+  // [échelle du téléphone, décalage en % de la largeur, glissement du décor en %]
+  var CAM = [[1,0,0],[.9,6,-1.2],[1.05,-3,1.2],[.92,5,-1],[1,0,1],[.86,9,0],[1.05,-3,1.2],[.92,6,-1.2],[1.02,-2,1],[.9,6,-1],[1.04,0,1.2]];
+  var telZone = document.querySelector(".tel-zone");
+  // une page métier du site peut ouvrir la démo sur son chapitre · /pro/demo/#hotel
+  var ANCRE = { metiers: 5, hotel: 6, chauffeur: 7, coworking: 8, loisirs: 9, mariage: 10 };
+  var ancre = ANCRE[location.hash.slice(1)];
+  if (ancre !== undefined) addEventListener("load", function(){ mesurer(); scrollTo(0, debut + ((ancre + .25) / N) * max); });
+  // les jeux qui sortent du téléphone · [jeu, x, y, rotation] en % de la boîte du téléphone
+  var OBJETS = {
+    2: [["debat",104,2,-8],["quiz",130,4,10],["coupable",108,10,-6],["mytho",130,16,8],["intrus",104,27,-10],["commun",130,33,12],["miroir",108,44,-6],["piege",130,49,6]],
+    6: [["debat",108,2,-8],["quiz",130,14,10]],
+    7: [["mytho",108,2,8],["quiz",130,14,-8]],
+    8: [["commun",108,2,-6],["intrus",130,14,10],["miroir",116,26,-4]],
+    9: [["piege",108,2,6],["coupable",130,14,-8],["intrus",116,26,8]],
+    10: [["miroir",108,2,-6],["commun",130,14,8],["debat",116,26,-8]]
+  };
+  var boiteObj = $("objets"), objets = {};
+  Object.keys(OBJETS).forEach(function(k){ objets[k] = OBJETS[k].map(function(o){
+    var im = document.createElement("img"); im.src = "jeux/" + o[0] + ".webp"; im.alt = ""; im.loading = "lazy"; im.decoding = "async";
+    im.style.left = o[1] + "%"; im.style.top = o[2] + "%"; boiteObj.appendChild(im); return { el: im, r: o[3] };
+  }); });
+  var metiers = [].slice.call(document.querySelectorAll("#metiers button"));
+  metiers.forEach(function(b, k){ b.addEventListener("click", function(){ aller(6 + k, .25); }); });
+
+  // plus de calage automatique au repos du doigt · sur iPhone il se battait avec l'élan du défilement
+  // (le repos d'une étape couvre 60 % de sa course · on s'y arrête sans aide)
+  addEventListener("touchend", function(){
+    for (var k in films) (function(v){ if (!v._ok){ var p = v.play(); if (p) p.then(function(){ v.pause(); v._ok = 1; }).catch(function(){}); } })(films[k]);
+  }, { passive:true });
+
+  // la démo se joue · à l'étape 03 le visiteur vote sur le vrai écran et la table le compte
+  var zones = [].slice.call(document.querySelectorAll(".zone-v")), vote = null, jVu = null;
+  zones.forEach(function(z){ z.addEventListener("click", function(){ vote = z.dataset.c; zones.forEach(function(y){ y.toggleAttribute("data-pris", y === z); }); $("consigne").textContent = "Votre vote est compté"; }); });
+  var eVu = -1, lVu = -1, mVu = null;
+  function image(t){
+    requestAnimationFrame(image);
+    var dt = Math.min(64, (t - avant) || 16); avant = t;
+    pos += (cible - pos) * (calme ? 1 : 1 - Math.exp(-dt / 95));      // amorti indépendant de la cadence
+    if (Math.abs(cible - pos) < .00002) pos = cible;
+    var x = pos * N, i = Math.min(N-1, Math.floor(x)), u = x - i, dernier = i === N-1;
+    var suiv = Math.min(N-1, i+1), p = dernier ? 0 : lisse(REPOS, 1, u), bouge = DECOR[i] !== DECOR[suiv];
+    film(i); film(i + 1);
+
+    // le décor · image de repos, puis le film, puis l'image de repos suivante (qui est sa dernière image)
+    var v = films[i], ok = bouge && pret(v);
+    if (ok){ var d = v.duration, tt = Math.min(d - .05, lisse(REPOS + .02, .98, u) * d); if (Math.abs(v.currentTime - tt) > .012) { try { v.currentTime = tt; } catch(e){} } }
+    var oFilm = ok ? lisse(REPOS, REPOS + .03, u) * (1 - lisse(.975, .995, u)) : 0;
+    for (var k in films) films[k].style.opacity = (+k === i) ? oFilm : 0;
+    imgs.forEach(function(im, k){
+      var o = 0;
+      if (k === DECOR[i]) o = bouge ? (ok ? 1 - lisse(REPOS + .03, REPOS + .05, u) : 1 - p) : 1;
+      if (bouge && k === DECOR[suiv]) o = ok ? lisse(.97, .99, u) : p;
+      im.style.opacity = o;
+    });
+    // le décor respire à peine au repos · jamais plus de 1,03 · il est revenu à 1 avant le raccord
+    var souffle = Math.sin(Math.min(1, u / REPOS) * Math.PI);
+    decor.style.transform = calme ? "none" : "translateX(" + (CAM[i][2] * souffle) + "%) scale(" + (1 + souffle * .025) + ")";
+    if (!calme){
+      var gros = innerWidth >= 900, ca = CAM[i], cb = CAM[suiv], sc = ca[0] + (cb[0] - ca[0]) * p, dx = ca[1] + (cb[1] - ca[1]) * p;
+      if (!gros){ sc = 1 + Math.min(0, sc - 1) * .6; dx *= .4; }     // sur téléphone la caméra recule seulement · jamais sur le titre
+      telZone.style.transform = "translateX(" + dx + "%) scale(" + sc + ")";
+    }
+
+    // l'écran · il se pousse vers le haut comme une vraie navigation, net à toutes les images
+    var E = ECRAN[i], e1 = E[0], e2 = E[E.length - 1], eb = ECRAN[suiv][0];
+    var pi = e1 === e2 ? 0 : lisse(.3, .42, u), pe = (dernier || e2 === eb) ? 0 : lisse(.72, .9, u);
+    ecrans.forEach(function(im, k){
+      var y = 101;
+      if (pe > 0){ if (k === e2) y = -pe * 101; else if (k === eb) y = (1 - pe) * 101; }
+      else if (e1 === e2) y = (k === e1) ? 0 : 101;
+      else if (k === e1) y = -pi * 101; else if (k === e2) y = (1 - pi) * 101;
+      im.style.transform = "translateY(" + y + "%)";
+    });
+    zonesBoite.style.opacity = i === 2 ? 1 - lisse(.72, .8, u) : 0;
+    var e = (dernier ? 0 : lisse(.72, .9, u)) > .5 ? suiv : i;
+    if (e !== lVu){ lVu = e; racine.style.setProperty("--lueur", LUEUR[e]); scene.toggleAttribute("data-clair", e === 10); }
+    // la dernière étape · la carte d'avis monte dans l'écran comme une vraie feuille
+    var fin = i === 3 ? lisse(.82, 1, u) : (i === 4 ? 1 - lisse(.68, .8, u) : 0);
+    feuille.style.transform = "translateY(" + ((1 - fin) * 120) + "%)"; ombre.style.opacity = fin * .2;
+
+    // le téléphone · il garde sa place · il tourne à peine pendant un passage
+    var onde = Math.sin(p * Math.PI), large = innerWidth >= 900;
+    tel.style.transform = calme ? "none" : "rotateY(" + ((large ? -7 : -10) + onde * 13) + "deg) rotateX(" + (2 - onde * 3) + "deg) translateY(" + (onde * -8) + "px)";
+    reflet.style.setProperty("--rx", (-40 + (u < REPOS ? u / REPOS * 30 : 30 + p * 70)) + "%");
+
+    // les textes · ils sortent avant le film · le suivant se compose mot par mot pendant que le film arrive et finit sur l'image de repos
+    pas.forEach(function(q, k){
+      var c = k === 0 ? 1 : Math.min(1, Math.max(0, (x - (k - .2)) / .35));
+      var s = k === N - 1 ? 0 : lisse(k + .5, k + .62, x);
+      var W = q.w.length, P = q.pw.length;
+      q.w.forEach(function(m, j){ var a = j / W * .55; m.style.transform = "translateY(" + ((1 - lisse(a, a + .3, c)) * 135) + "%)"; });
+      q.pw.forEach(function(m, j){ var a = .5 + j / P * .35; m.style.opacity = lisse(a, a + .15, c); });
+      q.l.forEach(function(sp){ sp.style.transform = "translateY(" + (-135 * s) + "%)"; });
+      q.n.style.opacity = lisse(0, .2, c) * (1 - s); if (q.p) q.p.style.opacity = 1 - s;
+      q.el.setAttribute("aria-hidden", c * (1 - s) < .5);
+    });
+
+    // l'interface qui sort du téléphone · pilotée par le scroll
+    var a = lisse(.1, .5, u);
+    vifs.forEach(function(el, k){
+      var o = (k === i) ? lisse(.14, .26, u) * (dernier ? 1 : 1 - lisse(.5, .64, u)) : 0;
+      if (k === 0 && i === 0) o = 1 - lisse(.5, .64, u);
+      el.style.opacity = o; el.style.transform = "translateY(" + ((1 - o) * 14) + "px)";
+      if (fiches[k]){ var o2 = k === i ? lisse(.3, .42, u) : 0; fiches[k].style.opacity = o2; fiches[k].style.transform = "translateY(" + ((1 - o2) * 10) + "px)"; }
+    });
+    Object.keys(objets).forEach(function(k){ k = +k; objets[k].forEach(function(o, j){
+      var v = k === i ? lisse(.1 + j * .035, .2 + j * .035, u) * (dernier ? 1 : 1 - lisse(.5, .6, u)) : 0;
+      o.el.style.opacity = v;
+      if (v > 0 || o.vu){ o.vu = v > 0; var flot = calme ? 0 : Math.sin(t / 900 + j * 1.7) * 4;
+        o.el.style.transform = "translateY(" + ((1 - v) * 24 + flot) + "px) rotate(" + o.r + "deg) scale(" + (.6 + v * .4) + ")"; }
+    }); });
+    var choisit = i === 5 && u > .1 && u < REPOS;
+    if (choisit !== mVu){ mVu = choisit; metiers.forEach(function(b){ b.style.pointerEvents = choisit ? "auto" : "none"; b.tabIndex = choisit ? 0 : -1; }); }
+    if (i === 1){ var j = a < .5; $("cj").toggleAttribute("data-on", j); $("cc").toggleAttribute("data-on", !j); }
+    var joue = i === 2 && u < REPOS;
+    if (joue !== jVu){ jVu = joue; zones.forEach(function(z){ z.style.pointerEvents = joue ? "auto" : "none"; z.tabIndex = joue ? 0 : -1; }); }
+    if (i === 2){ var vo = Math.round(a * 3) + (vote === "o"), vn = Math.round(a) + (vote === "n"); $("vo").style.setProperty("--v", vo / 5); $("vn").style.setProperty("--v", vn / 5); $("no").textContent = vo; $("nn").textContent = vn; }
+    if (i === 3){ $("cloche").style.setProperty("--r", (calme ? 0 : Math.sin(a * Math.PI * 5) * 16 * (1 - a)) + "deg"); }
+    if (i === 4){ var n = lisse(.12, .6, u) * 5; etoiles.forEach(function(sv, k){ sv.toggleAttribute("data-on", n >= k + .5); }); $("note").textContent = n.toFixed(1).replace(".", ","); }
+
+    // le rail
+    var c = e >= CHAP[1].de ? 1 : 0, ch = CHAP[c];
+    if (c !== chapVu){ chapitre(c); eVu = -1; }
+    ligne.style.setProperty("--p", Math.max(0, Math.min(1, (pos * N - ch.de) / ch.noms.length)));
+    if (e !== eVu){ lignes.forEach(function(b, k){ k === e ? b.setAttribute("aria-current", "step") : b.removeAttribute("aria-current"); }); }
+    if (e !== eVu){ eVu = e; cpt.textContent = "0" + (e - ch.de + 1); boutons.forEach(function(b, k){ k === e - ch.de ? b.setAttribute("aria-current","step") : b.removeAttribute("aria-current"); }); }
+  }
+  requestAnimationFrame(image);
+})();
+</script>
+</body>
+</html>
