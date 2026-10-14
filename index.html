@@ -1,10 +1,10 @@
 <!doctype html>
 <html lang="fr">
 <head>
+<meta name="robots" content="noindex">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
-<meta name="robots" content="noindex,nofollow">
 <title>La démo LaTable</title>
 <link rel="preload" href="archivo-black-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="inter-latin.woff2" as="font" type="font/woff2" crossorigin>
@@ -40,7 +40,7 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 .pied a:active{transform:translateY(3px);box-shadow:0 1px 0 #c41650}
 .pied svg{width:22px;height:22px;fill:currentColor}
 
-.piste{position:relative;height:1584svh}
+.piste{position:relative;height:720svh}
 .scene{position:sticky;top:var(--tete);height:var(--sh);overflow:hidden;isolation:isolate;background:#000}
 
 /* le décor */
@@ -72,10 +72,11 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 /* le téléphone · un objet · il garde sa place, il tourne à peine, son écran se pousse comme une vraie navigation */
 .tel-zone{position:absolute;z-index:3;left:var(--bord);right:var(--bord);bottom:clamp(54px,8.6svh,70px);display:flex;align-items:flex-end;gap:clamp(10px,3.4vw,22px);pointer-events:none;perspective:1100px;transform-origin:20% 100%}
 .halo{position:absolute;left:22%;bottom:-6%;width:min(120vw,600px);aspect-ratio:1;transform:translateX(-50%);border-radius:50%;background:radial-gradient(closest-side,rgba(var(--lueur),.18),rgba(var(--lueur),0) 70%);mix-blend-mode:screen}
-.tel{position:relative;flex:none;height:var(--ht);aspect-ratio:474/1012;border-radius:12.4% / 5.8%;padding:2%;will-change:transform;
-  background:linear-gradient(135deg,#4a464f 0,#17151a 22%,#0b0a0d 60%,#2d2a32 100%);
-  box-shadow:0 0 0 1px rgba(255,255,255,.1),inset 0 0 0 1px rgba(255,255,255,.3),inset 0 0 0 2.5px #0a090b,-10px 26px 50px rgba(0,0,0,.6),-3px 8px 14px rgba(0,0,0,.55)}
-.tel-ecran{position:relative;width:100%;height:100%;border-radius:10.4% / 4.9%;overflow:hidden;background:#0c0b0e}
+.tel{position:relative;flex:none;height:var(--ht);aspect-ratio:440/902;will-change:transform;filter:drop-shadow(-10px 26px 34px rgba(0,0,0,.6)) drop-shadow(-2px 6px 8px rgba(0,0,0,.5))}
+/* un vrai iPhone 16 Pro · titane, bord noir, Dynamic Island · l'écran est posé dessous et la coque le recouvre */
+.coque{position:absolute;inset:0;width:100%;height:100%;z-index:4;pointer-events:none}
+.tel-ecran,.reflet{position:absolute;left:4.318%;top:1.663%;width:91.364%;height:96.674%;border-radius:13.93% / 6.42%;overflow:hidden}
+.tel-ecran{background:#0c0b0e}
 .tel-ecran .e{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 0;transform:translateY(101%);will-change:transform}
 .tel-ecran .e[data-e="0"]{transform:none}
 .ombre{position:absolute;inset:0;background:#0b0a0d;opacity:0}
@@ -86,11 +87,11 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 .zone-v:active{background:rgba(255,255,255,.28)}
 .zone-v[data-pris]{box-shadow:inset 0 0 0 3px #fff}
 .zones{position:absolute;inset:0;z-index:2;pointer-events:none}
-.reflet{position:absolute;inset:2%;border-radius:10.4% / 4.9%;pointer-events:none;overflow:hidden}
+.reflet{pointer-events:none;z-index:3}
 .reflet::before{content:"";position:absolute;inset:-20% -60%;background:linear-gradient(112deg,rgba(255,255,255,0) 40%,rgba(255,255,255,.16) 49%,rgba(255,255,255,0) 58%);transform:translateX(var(--rx,-40%))}
 
 /* les jeux en objets autour du téléphone · les vrais visuels de la vitrine · ils arrivent un par un au défilement */
-.objets{position:absolute;left:0;bottom:0;height:var(--ht);aspect-ratio:474/1012;pointer-events:none;z-index:2}
+.objets{position:absolute;left:0;bottom:0;height:var(--ht);aspect-ratio:440/902;pointer-events:none;z-index:2}
 .objets img{position:absolute;width:25%;height:auto;opacity:0;filter:drop-shadow(0 10px 14px rgba(0,0,0,.55));will-change:transform,opacity}
 /* l'interface sort du téléphone · un élément vivant par étape */
 .vifs{position:relative;flex:1;min-width:0;max-width:250px;height:var(--ht)}
@@ -178,6 +179,42 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 .suite .liens{display:flex;flex-wrap:wrap;gap:12px;margin-top:.4rem}
 .suite .liens a{display:inline-flex;align-items:center;height:48px;padding:0 22px;border-radius:99px;border:1.5px solid rgba(255,255,255,.5);color:var(--blanc);font:700 .95rem/1 var(--fd);text-decoration:none}
 
+/* la scène des secteurs · plusieurs téléphones côte à côte · un mot qui grésille */
+.secteurs{position:relative;z-index:2;background:var(--nuit);padding:16svh 0 8svh;overflow:hidden}
+.sec-tete{padding:0 var(--bord);margin-bottom:7svh}
+.sec-sur{font:400 .95rem/1 var(--fa);letter-spacing:.06em;text-transform:uppercase;color:var(--rose)}
+.secteurs h2{margin-top:1.1rem;font:400 clamp(1.1rem,5vw,3.4rem)/1.04 var(--fa);text-transform:uppercase}
+.sec-l{display:block}
+.foudre{position:relative;display:block;margin:.12em 0 .08em;font-size:clamp(2.9rem,14.6vw,10.5rem);line-height:.9;letter-spacing:-.01em}
+.foudre-mot{position:relative;z-index:1;display:inline-block;color:#fff;filter:url(#grille);text-shadow:0 0 .06em #fff,0 0 .18em rgba(255,45,111,.95),0 0 .5em rgba(255,45,111,.55)}
+.foudre[data-flash] .foudre-mot{color:#fff3f7;text-shadow:0 0 .08em #fff,0 0 .3em #ff2d6f,0 0 .9em rgba(255,45,111,.8)}
+.foudre canvas{position:absolute;z-index:2;left:-4%;top:-30%;width:108%;height:160%;pointer-events:none;mix-blend-mode:screen}
+.sec-rail{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;padding:0 var(--bord) 6px;scrollbar-width:none}
+.sec-rail::-webkit-scrollbar{display:none}
+.secteur{position:relative;flex:none;width:min(74vw,330px);aspect-ratio:3/4.4;border-radius:22px;overflow:hidden;scroll-snap-align:center;color:var(--blanc);text-decoration:none;background:#151317;isolation:isolate;
+  opacity:0;transform:translateY(40px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1);transition-delay:calc(var(--k) * 70ms)}
+.secteurs[data-vu] .secteur{opacity:1;transform:none}
+.sec-fond{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2;transform:scale(1.04)}
+.secteur::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(0deg,rgba(11,10,13,.95) 0,rgba(11,10,13,.55) 32%,rgba(11,10,13,.15) 60%,rgba(11,10,13,.35) 100%)}
+.mini{position:absolute;left:50%;top:7%;height:66%;aspect-ratio:440/902;transform:translateX(-50%) rotate(-4deg);filter:drop-shadow(0 18px 24px rgba(0,0,0,.65))}
+.secteur:nth-child(even) .mini{transform:translateX(-50%) rotate(4deg)}
+.mini-ecran{position:absolute;left:4.318%;top:1.663%;width:91.364%;height:96.674%;border-radius:13.93% / 6.42%;overflow:hidden;background:#0c0b0e}
+.mini-ecran img{width:100%;height:100%;object-fit:cover;object-position:50% 0}
+.sec-txt{position:absolute;left:18px;right:18px;bottom:18px;display:grid;gap:4px}
+.sec-txt b{font:400 1.5rem/1 var(--fa);text-transform:uppercase}
+.sec-txt span{font:600 .95rem/1.3 var(--fd);color:rgba(255,255,255,.86)}
+@media (min-width:900px){
+  .secteurs{padding:18svh 0 10svh}
+  .sec-tete{padding:0 var(--gauche)}
+  .secteurs h2{font-size:clamp(2rem,3.4vw,3.6rem)}
+  .sec-rail{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;padding:0 var(--gauche);overflow:visible}
+  .secteur{width:auto;aspect-ratio:4/4.6}
+  .secteur:nth-child(3n+2){margin-top:60px}
+  .secteur:hover .mini{transform:translateX(-50%) rotate(0) translateY(-6px);transition:transform .5s cubic-bezier(.16,1,.3,1)}
+  .secteur:hover .sec-fond{transform:scale(1.08);transition:transform 1.2s cubic-bezier(.16,1,.3,1)}
+}
+@media (prefers-reduced-motion:reduce){.secteur{opacity:1;transform:none;transition:none}.foudre-mot{filter:none}}
+
 @media (min-width:600px) and (max-width:899px){:root{--ht:min(60svh,calc(var(--sh) - 320px))}.pas h2{font-size:4.2rem}.pas.m h2{font-size:3.4rem}.pas p{font-size:1.5rem}.vifs{max-width:320px}}
 @media (max-width:350px){.pied svg{display:none}.vifs{display:none}.tel-zone{justify-content:center}.halo{left:50%}.objets{left:50%;transform:translateX(-50%)}}
 @media (min-width:900px){
@@ -190,14 +227,14 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
   .tel-zone{left:var(--split);right:0;bottom:7svh;justify-content:center;gap:0;transform-origin:50% 100%}
   .halo{left:50%}
   .objets{left:50%;transform:translateX(-50%)}
-  .vifs{position:absolute;left:calc(50% + var(--ht) * .234 + 16px);bottom:0;width:min(230px,calc(50% - var(--ht) * .234 - 36px));max-width:none;flex:none}
+  .vifs{position:absolute;left:calc(50% + var(--ht) * .244 + 16px);bottom:0;width:min(230px,calc(50% - var(--ht) * .244 - 36px));max-width:none;flex:none}
   .petit{font-size:.95rem}.puce,.notif strong,.fiche strong,.vote div,.vote span{font-size:1.1875rem}.verre{padding:15px 16px}.choix b,.choix button{font-size:.95rem;height:48px}
   .pas{right:auto;left:var(--gauche);top:12svh;width:calc(var(--split) - var(--gauche) - 3vw)}
   .pas h2{font-size:clamp(3rem,5vw,6.4rem);margin-top:1.1rem}
   .pas.m h2{font-size:clamp(2.4rem,4.1vw,5rem)}
   .pas .n{font-size:1.1875rem}
   .rail{display:none}
-  .sommaire{display:grid;grid-template-columns:1fr 1fr;gap:0 4vw;position:absolute;z-index:6;left:var(--gauche);bottom:6svh;width:calc(var(--split) - var(--gauche) - 3vw)}
+  .sommaire{display:grid;grid-template-columns:1fr;gap:0 4vw;position:absolute;z-index:6;left:var(--gauche);bottom:6svh;width:calc(var(--split) - var(--gauche) - 3vw)}
   .sommaire h3{font:400 .75rem/1 var(--fa);letter-spacing:.08em;text-transform:uppercase;color:var(--rose);margin-bottom:10px}
   .sommaire button{display:flex;align-items:center;gap:12px;width:100%;min-height:32px;text-align:left;font:600 .95rem/1.2 var(--fd);color:rgba(255,255,255,.55);transition:color .3s}
   .sommaire button b{font:400 .75rem/1 var(--fa);width:2.2em;color:inherit}
@@ -223,6 +260,30 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 </style>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="ti" x1="0" x2="1"><stop offset="0" stop-color="#151416"/><stop offset=".012" stop-color="#9a989e"/><stop offset=".03" stop-color="#46454a"/><stop offset=".5" stop-color="#2b2a2e"/><stop offset=".97" stop-color="#46454a"/><stop offset=".988" stop-color="#9a989e"/><stop offset="1" stop-color="#151416"/></linearGradient>
+    <linearGradient id="ti-h" x1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".35"/><stop offset=".03" stop-color="#fff" stop-opacity="0"/><stop offset=".97" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#fff" stop-opacity=".18"/></linearGradient>
+    <linearGradient id="bt" x1="0" x2="1"><stop offset="0" stop-color="#232226"/><stop offset=".5" stop-color="#8a888e"/><stop offset="1" stop-color="#232226"/></linearGradient>
+    <filter id="grille" x="-5%" y="-20%" width="110%" height="140%"><feTurbulence id="grille-bruit" type="fractalNoise" baseFrequency=".012 .9" numOctaves="1" seed="2"/><feDisplacementMap in="SourceGraphic" scale="5"/></filter>
+    <radialGradient id="lentille"><stop offset="0" stop-color="#2a3a5c"/><stop offset=".45" stop-color="#0c1120"/><stop offset="1" stop-color="#030406"/></radialGradient>
+  </defs>
+  <symbol id="iphone" viewBox="0 0 440 902">
+    <rect x=".5" y="168" width="6" height="34" rx="2" fill="url(#bt)"/>
+    <rect x=".5" y="232" width="6" height="62" rx="2" fill="url(#bt)"/>
+    <rect x=".5" y="310" width="6" height="62" rx="2" fill="url(#bt)"/>
+    <rect x="433.5" y="262" width="6" height="96" rx="2" fill="url(#bt)"/>
+    <rect x="434.5" y="560" width="4" height="58" rx="1.5" fill="#3d3c41"/>
+    <path fill="url(#ti)" fill-rule="evenodd" d="M76 0H364A72 72 0 0 1 436 72V830A72 72 0 0 1 364 902H76A72 72 0 0 1 4 830V72A72 72 0 0 1 76 0ZM75 15H365A56 56 0 0 1 421 71V831A56 56 0 0 1 365 887H75A56 56 0 0 1 19 831V71A56 56 0 0 1 75 15Z"/>
+    <path fill="url(#ti-h)" fill-rule="evenodd" d="M76 0H364A72 72 0 0 1 436 72V830A72 72 0 0 1 364 902H76A72 72 0 0 1 4 830V72A72 72 0 0 1 76 0ZM75 15H365A56 56 0 0 1 421 71V831A56 56 0 0 1 365 887H75A56 56 0 0 1 19 831V71A56 56 0 0 1 75 15Z"/>
+    <path fill="#050506" fill-rule="evenodd" d="M76.0 4.5H364.0A67.5 67.5 0 0 1 431.5 72.0V830.0A67.5 67.5 0 0 1 364.0 897.5H76.0A67.5 67.5 0 0 1 8.5 830.0V72.0A67.5 67.5 0 0 1 76.0 4.5ZM75 15H365A56 56 0 0 1 421 71V831A56 56 0 0 1 365 887H75A56 56 0 0 1 19 831V71A56 56 0 0 1 75 15Z"/>
+    <path fill="none" stroke="#fff" stroke-opacity=".08" stroke-width="1" d="M76.0 4.5H364.0A67.5 67.5 0 0 1 431.5 72.0V830.0A67.5 67.5 0 0 1 364.0 897.5H76.0A67.5 67.5 0 0 1 8.5 830.0V72.0A67.5 67.5 0 0 1 76.0 4.5Z"/>
+    <rect x="4" y="96" width="2.5" height="4" fill="#5c5b60"/><rect x="433.5" y="96" width="2.5" height="4" fill="#5c5b60"/>
+    <rect x="4" y="802" width="2.5" height="4" fill="#5c5b60"/><rect x="433.5" y="802" width="2.5" height="4" fill="#5c5b60"/>
+    <rect x="157" y="26" width="126" height="37" rx="18.5" fill="#000"/>
+    <circle cx="264" cy="44.5" r="7.5" fill="url(#lentille)"/><circle cx="262" cy="42.5" r="1.6" fill="#7d8fb8" opacity=".5"/>
+  </symbol>
+</svg>
 <header class="tete"><span class="logo" id="logo" role="img" aria-label="LaTable"></span><a href="https://www.latable.pro/">Le site</a></header>
 <nav class="pied"><a href="https://wa.me/33749581271"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2z"/><path d="M16.6 14.1c-.3-.1-1.500-.7-1.700-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1-1.400-.7-2.500-1.600-3.300-2.900-.2-.4.2-.4.6-1.200.1-.2 0-.3 0-.5l-.8-1.800c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.9.9-1 2.100-.3 3.500 1.100 2 2.600 3.400 4.600 4.300 2.100.9 2.600.7 3.600.3.600-.3 1.100-.9 1.200-1.400.1-.3.1-.5-.2-.6z"/></svg>Nous écrire sur WhatsApp</a></nav>
 
@@ -239,11 +300,6 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
       <img data-d="1" src="img/fin1.jpg" alt="Des amis autour de la table leur téléphone à la main" loading="lazy">
       <img data-d="2" src="img/fin2.jpg" alt="Le comptoir du restaurant avec un plateau et un écran" loading="lazy">
       <img data-d="3" src="img/fin3.jpg" alt="La table après le repas dans une lumière chaude" loading="lazy">
-      <img data-d="4" src="img/m1.jpg" alt="Une chambre d'hôtel la nuit avec sa lampe de chevet" loading="lazy">
-      <img data-d="5" src="img/m2.jpg" alt="L'intérieur d'une berline vu de la banquette arrière" loading="lazy">
-      <img data-d="6" src="img/m3.jpg" alt="La grande table d'un coworking avec des ordinateurs fermés" loading="lazy">
-      <img data-d="7" src="img/m4.jpg" alt="Une table basse devant les pistes d'un bowling" loading="lazy">
-      <img data-d="8" src="img/m5.jpg" alt="Une table de mariage dressée avec des bougies" loading="lazy">
     </div>
     <div class="voile"></div>
 
@@ -255,64 +311,59 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
           <img class="e" data-e="1" src="ecrans/ecran-choix.webp" alt="">
           <img class="e" data-e="2" src="ecrans/ecran-jeu-debat.webp" alt="">
           <img class="e" data-e="3" src="ecrans/ecran-paye.webp" alt="">
-          <img class="e" data-e="4" src="ecrans/ecran-hotel-choix.webp" alt="" loading="lazy">
-          <img class="e" data-e="5" src="ecrans/ecran-hotel-infos.webp" alt="" loading="lazy">
-          <img class="e" data-e="6" src="ecrans/ecran-chauffeur-choix.webp" alt="" loading="lazy">
-          <img class="e" data-e="7" src="ecrans/ecran-chauffeur-contact.webp" alt="" loading="lazy">
-          <img class="e" data-e="8" src="ecrans/ecran-coworking-choix.webp" alt="" loading="lazy">
-          <img class="e" data-e="9" src="ecrans/ecran-coworking-infos.webp" alt="" loading="lazy">
-          <img class="e" data-e="10" src="ecrans/ecran-jeu-menu.webp" alt="" loading="lazy">
-          <img class="e" data-e="11" src="ecrans/ecran-mariage-choix.webp" alt="" loading="lazy">
-          <img class="e" data-e="12" src="ecrans/ecran-mariage-infos.webp" alt="" loading="lazy">
           <div class="zones" id="zones"><button type="button" class="zone-v" data-c="o" aria-label="Voter oui" tabindex="-1"></button><button type="button" class="zone-v" data-c="n" aria-label="Voter non" tabindex="-1"></button></div>
           <div class="ombre" id="ombre"></div>
           <div class="feuille" id="feuille"><img src="ecrans/carte-avis.webp" alt=""></div>
         </div>
         <div class="reflet" id="reflet"></div>
+        <svg class="coque" aria-hidden="true"><use href="#iphone"/></svg>
       </div>
       <div class="objets" id="objets" aria-hidden="true"></div>
       <div class="vifs">
         <div class="vif" data-v="0"><div class="verre puce">Sans appli</div><div class="verre puce">Tous les téléphones</div></div>
-        <div class="vif" data-v="1"><div class="verre"><p class="petit">Un seul QR</p><div class="choix"><b id="cj" data-on>Jouer</b><b id="cc">La carte</b></div></div></div>
+        <div class="vif" data-v="1"><div class="verre"><p class="petit">Un seul QR</p><div class="choix"><b id="cj">Jouer</b><b id="cc" data-on>La carte</b></div></div></div>
         <div class="vif" data-v="2"><div class="verre"><p class="petit">Les jeux</p><div class="grille-jeux"><img src="jeux/debat.webp" alt="" loading="lazy"><img src="jeux/quiz.webp" alt="" loading="lazy"><img src="jeux/coupable.webp" alt="" loading="lazy"><span>+6</span></div></div><div class="verre"><p class="petit" id="consigne">Touchez oui ou non</p><div class="vote"><div>Oui<i style="--c:#ff2d6f" id="vo"></i><span id="no">0</span></div><div>Non<i style="--c:#2f80ff" id="vn"></i><span id="nn">0</span></div></div></div></div>
-        <div class="vif" data-v="3"><div class="verre notif"><div class="ico"><svg id="cloche" viewBox="0 0 24 24"><path d="M12 22a2.5 2.5 0 0 0 2.4-2H9.6A2.5 2.5 0 0 0 12 22zm7-6v-5a7 7 0 0 0-5.5-6.8V3.5a1.5 1.5 0 0 0-3 0v.7A7 7 0 0 0 5 11v5l-2 2v1h18v-1l-2-2z"/></svg></div><div><p class="petit">Au comptoir</p><strong>Commande n°&nbsp;55</strong></div></div></div>
+        <div class="vif" data-v="3"><div class="verre notif"><div class="ico"><svg id="cloche" viewBox="0 0 24 24"><path d="M12 22a2.5 2.5 0 0 0 2.4-2H9.6A2.5 2.5 0 0 0 12 22zm7-6v-5a7 7 0 0 0-5.5-6.8V3.5a1.5 1.5 0 0 0-3 0v.7A7 7 0 0 0 5 11v5l-2 2v1h18v-1l-2-2z"/></svg></div><div><p class="petit">C’est prêt</p><strong>Commande n°&nbsp;55</strong></div></div></div>
         <div class="vif" data-v="4"><div class="verre"><div class="avis-g"><svg viewBox="0 0 48 48" role="img" aria-label="Google"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg><b id="note">0,0</b></div><div class="etoiles" id="etoiles"></div></div></div>
-        <div class="vif" data-v="5"><div class="choix seul" id="metiers"><button type="button" tabindex="-1">Hôtel</button><button type="button" tabindex="-1">Chauffeur</button><button type="button" tabindex="-1">Coworking</button><button type="button" tabindex="-1">Loisirs</button><button type="button" tabindex="-1">Mariage</button></div></div>
-        <div class="vif" data-v="6"><div class="verre fiche"><p class="petit">Le Wi-Fi</p><strong>Copié en un geste</strong></div></div>
-        <div class="vif" data-v="7"><div class="verre fiche"><p class="petit">Une course</p><strong>Réservée sur WhatsApp</strong></div></div>
-        <div class="vif" data-v="8"><div class="verre fiche"><p class="petit">L’agenda</p><strong>L’afterwork du jeudi</strong></div></div>
-        <div class="vif" data-v="9"><div class="verre fiche"><p class="petit">Avant le créneau</p><strong>La salle d’attente joue</strong></div></div>
-        <div class="vif" data-v="10"><div class="verre fiche"><p class="petit">Les photos du jour</p><strong>Partagées par les invités</strong></div></div>
       </div>
     </div>
 
     <section class="pas" data-p="0"><span class="n">01</span><h2><span class="l"><span>Il scanne</span></span><span class="l"><span>votre QR</span></span></h2></section>
-    <section class="pas" data-p="1"><span class="n">02</span><h2><span class="l"><span>Votre lieu</span></span><span class="l"><span>s'ouvre</span></span></h2></section>
-    <section class="pas" data-p="2"><span class="n">03</span><h2><span class="l"><span>La table</span></span><span class="l"><span>joue</span></span></h2></section>
-    <section class="pas" data-p="3"><span class="n">04</span><h2><span class="l"><span>Il commande</span></span><span class="l"><span>de sa table</span></span></h2></section>
-    <section class="pas" data-p="4"><span class="n">05</span><h2><span class="l"><span>Il laisse</span></span><span class="l"><span>un avis</span></span></h2></section>
-    <section class="pas" data-p="5"><span class="n">Et aussi</span><h2><span class="l"><span>Et pour</span></span><span class="l"><span>votre métier</span></span></h2></section>
-    <section class="pas m" data-p="6"><span class="n">Hôtel</span><h2><span class="l"><span>Tout l’hôtel</span></span><span class="l"><span>dans leur</span></span><span class="l"><span>poche</span></span></h2></section>
-    <section class="pas m" data-p="7"><span class="n">Chauffeur VTC</span><h2><span class="l"><span>Votre fiche</span></span><span class="l"><span>contact</span></span><span class="l"><span>en un scan</span></span></h2></section>
-    <section class="pas m" data-p="8"><span class="n">Coworking</span><h2><span class="l"><span>Vos membres</span></span><span class="l"><span>se rencontrent</span></span><span class="l"><span>enfin</span></span></h2></section>
-    <section class="pas m" data-p="9"><span class="n">Loisirs</span><h2><span class="l"><span>L’attente</span></span><span class="l"><span>devient</span></span><span class="l"><span>un jeu</span></span></h2></section>
-    <section class="pas m" data-p="10"><span class="n">Mariage</span><h2><span class="l"><span>Les invités</span></span><span class="l"><span>jouent entre</span></span><span class="l"><span>deux plats</span></span></h2></section>
+    <section class="pas" data-p="1"><span class="n">02</span><h2><span class="l"><span>Il commande</span></span><span class="l"><span>de sa table</span></span></h2></section>
+    <section class="pas" data-p="2"><span class="n">03</span><h2><span class="l"><span>La table joue</span></span><span class="l"><span>en attendant</span></span></h2></section>
+    <section class="pas" data-p="3"><span class="n">04</span><h2><span class="l"><span>Sa commande</span></span><span class="l"><span>arrive</span></span></h2></section>
+    <section class="pas" data-p="4"><span class="n">05</span><h2><span class="l"><span>Fin de partie</span></span><span class="l"><span>il laisse un avis</span></span></h2></section>
 
     <nav class="sommaire" id="sommaire" aria-label="Le sommaire de la démo"></nav>
     <nav class="rail" aria-label="Les étapes">
       <span class="cpt"><b id="cpt" style="font-weight:400">01</b> <em id="sur">/ 05</em></span>
       <div class="ligne" id="ligne">
       </div>
-      <a class="passer" href="#suite">Passer</a>
+      <a class="passer" href="#secteurs">Passer</a>
     </nav>
     <div class="grain"></div>
   </div>
 </main>
 
+<section class="secteurs" id="secteurs" aria-labelledby="sec-titre">
+  <div class="sec-tete">
+    <p class="sec-sur">Selon votre secteur d’activité</p>
+    <h2 id="sec-titre"><span class="sec-l">Le QR code est un outil</span><span class="foudre" id="foudre"><span class="foudre-mot">surpuissant</span><canvas aria-hidden="true"></canvas></span><span class="sec-l">pour mettre en avant votre commerce</span></h2>
+  </div>
+  <div class="sec-rail" id="sec-rail">
+    <a class="secteur" href="https://www.latable.pro/pro/restaurants/" style="--k:0"><img class="sec-fond" src="img/fin1.jpg" alt="" loading="lazy"><span class="mini"><span class="mini-ecran"><img src="ecrans/ecran-choix.webp" alt="" loading="lazy"></span><svg class="coque" aria-hidden="true"><use href="#iphone"/></svg></span><span class="sec-txt"><b>Restaurant</b><span>Commande et jeux sur un seul QR</span></span></a>
+    <a class="secteur" href="https://www.latable.pro/pro/hotels/" style="--k:1"><img class="sec-fond" src="img/m1.jpg" alt="" loading="lazy"><span class="mini"><span class="mini-ecran"><img src="ecrans/ecran-hotel-infos.webp" alt="" loading="lazy"></span><svg class="coque" aria-hidden="true"><use href="#iphone"/></svg></span><span class="sec-txt"><b>Hôtel</b><span>Le Wi-Fi copié en un geste</span></span></a>
+    <a class="secteur" href="https://www.latable.pro/pro/transport/" style="--k:2"><img class="sec-fond" src="img/m2.jpg" alt="" loading="lazy"><span class="mini"><span class="mini-ecran"><img src="ecrans/ecran-chauffeur-contact.webp" alt="" loading="lazy"></span><svg class="coque" aria-hidden="true"><use href="#iphone"/></svg></span><span class="sec-txt"><b>Chauffeur VTC</b><span>Une course réservée sur WhatsApp</span></span></a>
+    <a class="secteur" href="https://www.latable.pro/pro/coworking/" style="--k:3"><img class="sec-fond" src="img/m3.jpg" alt="" loading="lazy"><span class="mini"><span class="mini-ecran"><img src="ecrans/ecran-coworking-infos.webp" alt="" loading="lazy"></span><svg class="coque" aria-hidden="true"><use href="#iphone"/></svg></span><span class="sec-txt"><b>Coworking</b><span>L’afterwork du jeudi dans l’agenda</span></span></a>
+    <a class="secteur" href="https://www.latable.pro/pro/loisirs/" style="--k:4"><img class="sec-fond" src="img/m4.jpg" alt="" loading="lazy"><span class="mini"><span class="mini-ecran"><img src="ecrans/ecran-jeu-menu.webp" alt="" loading="lazy"></span><svg class="coque" aria-hidden="true"><use href="#iphone"/></svg></span><span class="sec-txt"><b>Loisirs</b><span>La salle d’attente joue</span></span></a>
+    <a class="secteur" href="https://www.latable.pro/pro/qr-code-photo-mariage/" style="--k:5"><img class="sec-fond" src="img/m5.jpg" alt="" loading="lazy"><span class="mini"><span class="mini-ecran"><img src="ecrans/ecran-mariage-infos.webp" alt="" loading="lazy"></span><svg class="coque" aria-hidden="true"><use href="#iphone"/></svg></span><span class="sec-txt"><b>Mariage</b><span>Les photos partagées par les invités</span></span></a>
+  </div>
+</section>
+
 <section class="suite" id="suite">
   <div class="suite-jeux" aria-hidden="true"><img src="jeux/debat.webp" alt="" loading="lazy"><img src="jeux/quiz.webp" alt="" loading="lazy"><img src="jeux/coupable.webp" alt="" loading="lazy"><img src="jeux/mytho.webp" alt="" loading="lazy"><img src="jeux/intrus.webp" alt="" loading="lazy"><img src="jeux/commun.webp" alt="" loading="lazy"><img src="jeux/miroir.webp" alt="" loading="lazy"><img src="jeux/piege.webp" alt="" loading="lazy"></div>
-  <h2>Votre QR peut faire <em>bien plus</em></h2>
-  <p>On vous montre tout en dix minutes sur WhatsApp</p>
+  <h2>On vous le montre <em>en vrai</em></h2>
+  <p>Dix minutes sur WhatsApp et vous voyez tout</p>
   <div class="liens"><a href="https://www.latable.pro/pro/tarifs/">Voir les formules</a><a href="https://www.latable.pro/pro/jeux/">Les 9 jeux</a></div>
 </section>
 
@@ -323,23 +374,17 @@ window.FILMS = [
   { de: 2, src: "film/t2.mp4" },
   { de: 3, src: "film/t3.mp4" }
 ];
-// le chapitre des métiers · ajoutés quand ils sont tournés · sans eux la page fond d'un décor à l'autre
-window.FILMS_METIERS = [
-  { de: 5, src: "film/m1.mp4" },
-  { de: 6, src: "film/m2.mp4" }
-];
 </script>
 <script>
 (function(){
-  var N = 11, REPOS = .6;                              // une étape · repos de 0 à .6 · passage de .6 à 1
-  var DECOR = [0,0,1,2,3,3,4,5,6,7,8];
+  var N = 5, REPOS = .6;                              // une étape · repos de 0 à .6 · passage de .6 à 1
+  var DECOR = [0,0,1,2,3];
   // un ou deux vrais écrans par étape · le second se pousse au milieu du repos
-  var ECRAN = [[0],[1],[2],[3],[3],[0],[4,5],[6,7],[8,9],[10,2],[11,12]];
+  var ECRAN = [[0],[1,3],[2],[2],[2]];
   // deux chapitres · le rail montre celui où l'on est
-  var CHAP = [{ de: 0, noms: ["il scanne","votre lieu s'ouvre","la table joue","il commande","il laisse un avis"] },
-              { de: 5, noms: ["et pour votre métier","hôtel","chauffeur","coworking","loisirs","mariage"] }];
+  var CHAP = [{ de: 0, noms: ["il scanne","il commande","la table joue","sa commande arrive","il laisse un avis"] }];
   // la lumière que chaque écran jette sur la scène
-  var LUEUR = ["255,236,214","255,255,255","255,244,246","255,255,255","255,226,190","255,236,214","255,240,244","255,240,244","255,240,244","255,244,246","255,240,244"];
+  var LUEUR = ["255,236,214","255,255,255","255,244,246","255,255,255","255,226,190"];
   window.FILMS = (window.FILMS || []).concat(window.FILMS_METIERS || []);
   var mq = matchMedia("(prefers-reduced-motion: reduce)"), calme = mq.matches;
   if (mq.addEventListener) mq.addEventListener("change", function(e){ calme = e.matches; });
@@ -365,6 +410,10 @@ window.FILMS_METIERS = [
       if (plus > w) t.style.fontSize = (parseFloat(getComputedStyle(t).fontSize) * w / plus * .98) + "px";
     });
   }
+  // SURPUISSANT tient toujours sur une ligne · il remplit la largeur sans la dépasser
+  function ajusterFoudre(){ var f = document.getElementById("foudre"); if (!f) return; var m = f.firstElementChild;
+    f.style.fontSize = ""; var w = f.clientWidth, l = m.scrollWidth; if (l > w * .98) f.style.fontSize = (parseFloat(getComputedStyle(f).fontSize) * w * .98 / l) + "px"; dispatchEvent(new Event("foudre")); }
+  (document.fonts ? document.fonts.ready : Promise.resolve()).then(ajusterFoudre); addEventListener("resize", ajusterFoudre);
   (document.fonts ? document.fonts.ready : Promise.resolve()).then(ajuster); addEventListener("resize", ajuster);
   fetch("logo.svg").then(function(r){ return r.text(); }).then(function(s){ $("logo").innerHTML = s; }).catch(function(){ $("logo").textContent = "LaTable"; });
   var et = $("etoiles"); for (var s = 0; s < 5; s++) et.insertAdjacentHTML("beforeend", '<svg viewBox="0 0 24 24"><path d="M12 2l3 6.3 6.9.9-5 4.8 1.2 6.9L12 17.6 5.9 20.9l1.2-6.9-5-4.800 6.900-.900z"/></svg>');
@@ -400,7 +449,7 @@ window.FILMS_METIERS = [
   chapitre(0);
   // le sommaire de l'ordinateur · les deux chapitres côte à côte, chaque ligne mène à son étape
   var sommaire = $("sommaire"), lignes = [];
-  [["Votre client", 0], ["Votre métier", 1]].forEach(function(t){
+  [["Votre client", 0]].forEach(function(t){
     var col = document.createElement("div"); col.innerHTML = "<h3>" + t[0] + "</h3>"; var ch = CHAP[t[1]];
     ch.noms.forEach(function(nom, k){ var b = document.createElement("button"); b.type = "button";
       b.innerHTML = "<b>0" + (k + 1) + "</b>" + nom.charAt(0).toUpperCase() + nom.slice(1);
@@ -409,12 +458,11 @@ window.FILMS_METIERS = [
   });
   // la caméra · d'une étape à l'autre le téléphone avance, recule ou se décale, et le décor glisse
   // [échelle du téléphone, décalage en % de la largeur, glissement du décor en %]
-  var CAM = [[1,0,0],[.9,6,-1.2],[1.05,-3,1.2],[.92,-4,-1],[1,0,1],[.86,9,0],[1.05,-3,1.2],[.92,6,-1.2],[1.02,-2,1],[.9,6,-1],[1.04,0,1.2]];
+  var CAM = [[1,0,0],[.9,6,-1.2],[1.05,-3,1.2],[.92,-4,-1],[1,0,1]];
   var telZone = document.querySelector(".tel-zone");
   // une page métier du site peut ouvrir la démo sur son chapitre · /pro/demo/#hotel
-  var ANCRE = { metiers: 5, hotel: 6, chauffeur: 7, coworking: 8, loisirs: 9, mariage: 10 };
-  var ancre = ANCRE[location.hash.slice(1)];
-  if (ancre !== undefined) addEventListener("load", function(){ mesurer(); scrollTo(0, debut + ((ancre + .25) / N) * max); });
+  // les anciens liens vers un métier · /pro/demo/#hotel · mènent maintenant à la scène des secteurs
+  if (/^#(metiers|hotel|chauffeur|coworking|loisirs|mariage)$/.test(location.hash)) addEventListener("load", function(){ var c = $("secteurs"); if (c) c.scrollIntoView(); });
   // les jeux qui sortent du téléphone · [jeu, x, y, rotation] en % de la boîte du téléphone
   var OBJETS = {};   // les jeux vivent dans la carte de l'étape 03 · rien ne flotte sur les photos
   var boiteObj = $("objets"), objets = {};
@@ -514,7 +562,7 @@ window.FILMS_METIERS = [
     }); });
     var choisit = i === 5 && u > .1 && u < REPOS;
     if (choisit !== mVu){ mVu = choisit; metiers.forEach(function(b){ b.style.pointerEvents = choisit ? "auto" : "none"; b.tabIndex = choisit ? 0 : -1; }); }
-    if (i === 1){ var j = a < .5; $("cj").toggleAttribute("data-on", j); $("cc").toggleAttribute("data-on", !j); }
+    if (i === 1){ $("cj").removeAttribute("data-on"); $("cc").setAttribute("data-on", ""); }
     var joue = i === 2 && u < REPOS;
     if (joue !== jVu){ jVu = joue; zones.forEach(function(z){ z.style.pointerEvents = joue ? "auto" : "none"; z.tabIndex = joue ? 0 : -1; }); }
     if (i === 2){ var vo = Math.round(a * 3) + (vote === "o"), vn = Math.round(a) + (vote === "n"); $("vo").style.setProperty("--v", vo / 5); $("vn").style.setProperty("--v", vn / 5); $("no").textContent = vo; $("nn").textContent = vn; }
@@ -522,13 +570,48 @@ window.FILMS_METIERS = [
     if (i === 4){ var n = lisse(.12, .6, u) * 5; etoiles.forEach(function(sv, k){ sv.toggleAttribute("data-on", n >= k + .5); }); $("note").textContent = n.toFixed(1).replace(".", ","); }
 
     // le rail
-    var c = e >= CHAP[1].de ? 1 : 0, ch = CHAP[c];
+    var c = 0, ch = CHAP[0];
     if (c !== chapVu){ chapitre(c); eVu = -1; }
     ligne.style.setProperty("--p", Math.max(0, Math.min(1, (pos * N - ch.de) / ch.noms.length)));
     if (e !== eVu){ lignes.forEach(function(b, k){ k === e ? b.setAttribute("aria-current", "step") : b.removeAttribute("aria-current"); }); }
     if (e !== eVu){ eVu = e; cpt.textContent = "0" + (e - ch.de + 1); boutons.forEach(function(b, k){ k === e - ch.de ? b.setAttribute("aria-current","step") : b.removeAttribute("aria-current"); }); }
   }
   requestAnimationFrame(image);
+})();
+</script>
+<script>
+// la scène des secteurs · les cartes montent quand on arrive · SURPUISSANT grésille comme un arc électrique
+(function(){
+  var sec = document.getElementById("secteurs"), mot = document.getElementById("foudre"); if (!sec || !mot) return;
+  var calme = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  new IntersectionObserver(function(es, o){ es.forEach(function(e){ if (e.isIntersecting){ sec.setAttribute("data-vu", ""); o.disconnect(); } }); }, { threshold: .12 }).observe(sec);
+  if (calme) return;
+  var cv = mot.querySelector("canvas"), cx = cv.getContext("2d"), bruit = document.getElementById("grille-bruit"), vu = false, dernier = 0, eclairs = [];
+  new IntersectionObserver(function(es){ vu = es[0].isIntersecting; if (vu) requestAnimationFrame(tour); }).observe(mot);
+  function taille(){ var r = cv.getBoundingClientRect(), d = Math.min(2, devicePixelRatio || 1); cv.width = r.width * d; cv.height = r.height * d; cx.setTransform(d, 0, 0, d, 0, 0); }
+  addEventListener("resize", taille); addEventListener("foudre", taille); taille();
+  // un éclair · une ligne brisée par déplacements successifs du milieu, avec une branche de temps en temps
+  function arc(x1, y1, x2, y2, ecart){
+    var pts = [[x1, y1], [x2, y2]];
+    for (var n = 0; n < 6; n++){ var nv = [pts[0]]; for (var k = 1; k < pts.length; k++){ var a = pts[k-1], b = pts[k];
+      nv.push([(a[0]+b[0])/2 + (Math.random()-.5) * ecart * .4, (a[1]+b[1])/2 + (Math.random()-.5) * ecart]); nv.push(b); } pts = nv; ecart *= .55; }
+    return pts;
+  }
+  function trace(pts, l, a){ cx.beginPath(); cx.moveTo(pts[0][0], pts[0][1]); for (var k = 1; k < pts.length; k++) cx.lineTo(pts[k][0], pts[k][1]);
+    cx.strokeStyle = "rgba(255,45,111," + (a * .55) + ")"; cx.lineWidth = l * 5; cx.stroke();
+    cx.strokeStyle = "rgba(255,255,255," + a + ")"; cx.lineWidth = l; cx.stroke(); }
+  function tour(t){
+    if (!vu) return; requestAnimationFrame(tour);
+    var W = cv.clientWidth, H = cv.clientHeight;
+    if (t - dernier > 70 + Math.random() * 90){ dernier = t;
+      bruit.setAttribute("seed", Math.floor(Math.random() * 99));
+      if (Math.random() < .55){ var y = H * (.3 + Math.random() * .4), x1 = W * Math.random() * .5, x2 = x1 + W * (.2 + Math.random() * .5);
+        eclairs.push({ p: arc(x1, y, Math.min(W, x2), H * (.25 + Math.random() * .5), H * .5), v: 1, l: 1 + Math.random() * 1.4 });
+        if (Math.random() < .35){ mot.setAttribute("data-flash", ""); setTimeout(function(){ mot.removeAttribute("data-flash"); }, 60); } }
+    }
+    cx.clearRect(0, 0, W, H); cx.lineJoin = "round"; cx.shadowColor = "#ff2d6f"; cx.shadowBlur = 12;
+    eclairs = eclairs.filter(function(e){ e.v -= .09; if (e.v <= 0) return false; trace(e.p, e.l, e.v * (Math.random() < .2 ? .4 : 1)); return true; });
+  }
 })();
 </script>
 </body>
