@@ -250,3 +250,5 @@ body[data-page="accueil"] .m-rassure{margin:-8px 0 22px;font:700 1rem/1.3 var(--
 .r-avis:not(.nuit) .r-av figcaption{color:#5d5862}
 .r-avis:not(.nuit) .r-av--pro{background:#141215;border-color:#141215;color:#fff}
 .r-avis:not(.nuit) .r-av--pro figcaption{color:#ff6f9c}
+/* les plus petits écrans (iPhone SE · 320 px) · le bouton WhatsApp tient sur une ligne */
+@media (max-width:360px){body[data-page="accueil"] .m-bouton{white-space:nowrap;font-size:15px;padding-inline:16px;gap:8px}}
