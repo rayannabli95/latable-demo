@@ -186,11 +186,21 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 .secteurs h2{margin-top:1.1rem;font:400 clamp(1.1rem,5vw,3.4rem)/1.04 var(--fa);text-transform:uppercase}
 .sec-l{display:block}
 .foudre{position:relative;display:block;margin:.12em 0 .08em;font-size:clamp(2.9rem,14.6vw,10.5rem);line-height:.9;letter-spacing:-.01em}
-.foudre-mot{position:relative;z-index:1;display:inline-block;color:#fff;filter:url(#grille);text-shadow:0 0 .06em #fff,0 0 .18em rgba(255,45,111,.95),0 0 .5em rgba(255,45,111,.55)}
-.foudre[data-flash] .foudre-mot{color:#fff3f7;text-shadow:0 0 .08em #fff,0 0 .3em #ff2d6f,0 0 .9em rgba(255,45,111,.8)}
+.foudre-mot{position:relative;z-index:1;display:inline-block;white-space:nowrap}
+/* chaque lettre s'allume quand la charge l'atteint · éteinte c'est un tube de verre vide */
+.lt{display:inline-block;color:#1d1b21;-webkit-text-stroke:1.5px rgba(255,255,255,.14);transition:color .12s,text-shadow .12s}
+.lt[data-on]{color:#fff;-webkit-text-stroke:0;text-shadow:0 0 .04em #fff,0 0 .14em rgba(255,120,170,.95),0 0 .42em rgba(255,45,111,.7),0 0 .9em rgba(255,45,111,.35);animation:allume .42s steps(1) both}
+@keyframes allume{0%{opacity:1}12%{opacity:.25}22%{opacity:1}34%{opacity:.4}48%{opacity:1}62%{opacity:.7}74%,100%{opacity:1}}
+.lt[data-vibre]{color:#fff6fa;text-shadow:0 0 .05em #fff,0 0 .2em #ff7aa8,0 0 .6em #ff2d6f,0 0 1.2em rgba(255,45,111,.5)}
+.foudre[data-flash] .lt[data-on]{text-shadow:0 0 .06em #fff,0 0 .26em #ff8ab4,0 0 .8em #ff2d6f,0 0 1.6em rgba(255,45,111,.55)}
 .foudre canvas{position:absolute;z-index:2;left:-4%;top:-30%;width:108%;height:160%;pointer-events:none;mix-blend-mode:screen}
 .sec-rail{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;padding:0 var(--bord) 6px;scrollbar-width:none}
 .sec-rail::-webkit-scrollbar{display:none}
+.sec-cadre{position:relative}
+.sec-suiv{position:absolute;z-index:3;right:calc(var(--bord) - 6px);top:50%;width:52px;height:52px;margin-top:-26px;border-radius:50%;background:#fff;color:var(--nuit);display:grid;place-items:center;box-shadow:0 8px 22px rgba(0,0,0,.45);animation:pousse 1.6s ease-in-out infinite;transition:opacity .3s}
+.sec-suiv svg{width:22px;height:22px}
+.sec-suiv[data-fin]{opacity:0;pointer-events:none}
+@keyframes pousse{0%,100%{transform:translateX(0)}50%{transform:translateX(6px)}}
 .secteur{position:relative;flex:none;width:min(74vw,330px);aspect-ratio:3/4.4;border-radius:22px;overflow:hidden;scroll-snap-align:center;color:var(--blanc);text-decoration:none;background:#151317;isolation:isolate;
   opacity:0;transform:translateY(40px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1);transition-delay:calc(var(--k) * 70ms)}
 .secteurs[data-vu] .secteur{opacity:1;transform:none}
@@ -209,11 +219,12 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
   .secteurs h2{font-size:clamp(2rem,3.4vw,3.6rem)}
   .sec-rail{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;padding:0 var(--gauche);overflow:visible}
   .secteur{width:auto;aspect-ratio:4/4.6}
+  .sec-suiv{display:none}
   .secteur:nth-child(3n+2){margin-top:60px}
   .secteur:hover .mini{transform:translateX(-50%) rotate(0) translateY(-6px);transition:transform .5s cubic-bezier(.16,1,.3,1)}
   .secteur:hover .sec-fond{transform:scale(1.08);transition:transform 1.2s cubic-bezier(.16,1,.3,1)}
 }
-@media (prefers-reduced-motion:reduce){.secteur{opacity:1;transform:none;transition:none}.foudre-mot{filter:none}}
+@media (prefers-reduced-motion:reduce){.sec-suiv{animation:none}.secteur{opacity:1;transform:none;transition:none}.lt{color:#fff;-webkit-text-stroke:0;text-shadow:0 0 .14em rgba(255,45,111,.8)}}
 
 @media (min-width:600px) and (max-width:899px){:root{--ht:min(60svh,calc(var(--sh) - 320px))}.pas h2{font-size:4.2rem}.pas.m h2{font-size:3.4rem}.pas p{font-size:1.5rem}.vifs{max-width:320px}}
 @media (max-width:350px){.pied svg{display:none}.vifs{display:none}.tel-zone{justify-content:center}.halo{left:50%}.objets{left:50%;transform:translateX(-50%)}}
@@ -265,7 +276,6 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
     <linearGradient id="ti" x1="0" x2="1"><stop offset="0" stop-color="#151416"/><stop offset=".012" stop-color="#9a989e"/><stop offset=".03" stop-color="#46454a"/><stop offset=".5" stop-color="#2b2a2e"/><stop offset=".97" stop-color="#46454a"/><stop offset=".988" stop-color="#9a989e"/><stop offset="1" stop-color="#151416"/></linearGradient>
     <linearGradient id="ti-h" x1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".35"/><stop offset=".03" stop-color="#fff" stop-opacity="0"/><stop offset=".97" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#fff" stop-opacity=".18"/></linearGradient>
     <linearGradient id="bt" x1="0" x2="1"><stop offset="0" stop-color="#232226"/><stop offset=".5" stop-color="#8a888e"/><stop offset="1" stop-color="#232226"/></linearGradient>
-    <filter id="grille" x="-5%" y="-20%" width="110%" height="140%"><feTurbulence id="grille-bruit" type="fractalNoise" baseFrequency=".012 .9" numOctaves="1" seed="2"/><feDisplacementMap in="SourceGraphic" scale="5"/></filter>
     <radialGradient id="lentille"><stop offset="0" stop-color="#2a3a5c"/><stop offset=".45" stop-color="#0c1120"/><stop offset="1" stop-color="#030406"/></radialGradient>
   </defs>
   <symbol id="iphone" viewBox="0 0 440 902">
@@ -348,8 +358,9 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 <section class="secteurs" id="secteurs" aria-labelledby="sec-titre">
   <div class="sec-tete">
     <p class="sec-sur">Selon votre secteur d’activité</p>
-    <h2 id="sec-titre"><span class="sec-l">Le QR code est un outil</span><span class="foudre" id="foudre"><span class="foudre-mot">surpuissant</span><canvas aria-hidden="true"></canvas></span><span class="sec-l">pour mettre en avant votre commerce</span></h2>
+    <h2 id="sec-titre"><span class="sec-l">Le QR code est un outil</span><span class="foudre" id="foudre"><span class="foudre-mot" aria-label="surpuissant">surpuissant</span><canvas aria-hidden="true"></canvas></span><span class="sec-l">pour mettre en avant votre commerce</span></h2>
   </div>
+  <div class="sec-cadre">
   <div class="sec-rail" id="sec-rail">
     <a class="secteur" href="https://www.latable.pro/pro/restaurants/" style="--k:0"><img class="sec-fond" src="img/fin1.jpg" alt="" loading="lazy"><span class="mini"><span class="mini-ecran"><img src="ecrans/ecran-choix.webp" alt="" loading="lazy"></span><svg class="coque" aria-hidden="true"><use href="#iphone"/></svg></span><span class="sec-txt"><b>Restaurant</b><span>Commande et jeux sur un seul QR</span></span></a>
     <a class="secteur" href="https://www.latable.pro/pro/hotels/" style="--k:1"><img class="sec-fond" src="img/m1.jpg" alt="" loading="lazy"><span class="mini"><span class="mini-ecran"><img src="ecrans/ecran-hotel-infos.webp" alt="" loading="lazy"></span><svg class="coque" aria-hidden="true"><use href="#iphone"/></svg></span><span class="sec-txt"><b>Hôtel</b><span>Le Wi-Fi copié en un geste</span></span></a>
@@ -357,6 +368,8 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
     <a class="secteur" href="https://www.latable.pro/pro/coworking/" style="--k:3"><img class="sec-fond" src="img/m3.jpg" alt="" loading="lazy"><span class="mini"><span class="mini-ecran"><img src="ecrans/ecran-coworking-infos.webp" alt="" loading="lazy"></span><svg class="coque" aria-hidden="true"><use href="#iphone"/></svg></span><span class="sec-txt"><b>Coworking</b><span>L’afterwork du jeudi dans l’agenda</span></span></a>
     <a class="secteur" href="https://www.latable.pro/pro/loisirs/" style="--k:4"><img class="sec-fond" src="img/m4.jpg" alt="" loading="lazy"><span class="mini"><span class="mini-ecran"><img src="ecrans/ecran-jeu-menu.webp" alt="" loading="lazy"></span><svg class="coque" aria-hidden="true"><use href="#iphone"/></svg></span><span class="sec-txt"><b>Loisirs</b><span>La salle d’attente joue</span></span></a>
     <a class="secteur" href="https://www.latable.pro/pro/qr-code-photo-mariage/" style="--k:5"><img class="sec-fond" src="img/m5.jpg" alt="" loading="lazy"><span class="mini"><span class="mini-ecran"><img src="ecrans/ecran-mariage-infos.webp" alt="" loading="lazy"></span><svg class="coque" aria-hidden="true"><use href="#iphone"/></svg></span><span class="sec-txt"><b>Mariage</b><span>Les photos partagées par les invités</span></span></a>
+  </div>
+  <button type="button" class="sec-suiv" id="sec-suiv" aria-label="Voir le secteur suivant"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
   </div>
 </section>
 
@@ -580,37 +593,77 @@ window.FILMS = [
 })();
 </script>
 <script>
-// la scène des secteurs · les cartes montent quand on arrive · SURPUISSANT grésille comme un arc électrique
+// la scène des secteurs · les cartes montent quand on arrive · SURPUISSANT se charge au défilement puis grésille pour de bon
 (function(){
   var sec = document.getElementById("secteurs"), mot = document.getElementById("foudre"); if (!sec || !mot) return;
   var calme = matchMedia("(prefers-reduced-motion: reduce)").matches;
   new IntersectionObserver(function(es, o){ es.forEach(function(e){ if (e.isIntersecting){ sec.setAttribute("data-vu", ""); o.disconnect(); } }); }, { threshold: .12 }).observe(sec);
-  if (calme) return;
-  var cv = mot.querySelector("canvas"), cx = cv.getContext("2d"), bruit = document.getElementById("grille-bruit"), vu = false, dernier = 0, eclairs = [];
-  new IntersectionObserver(function(es){ vu = es[0].isIntersecting; if (vu) requestAnimationFrame(tour); }).observe(mot);
-  function taille(){ var r = cv.getBoundingClientRect(), d = Math.min(2, devicePixelRatio || 1); cv.width = r.width * d; cv.height = r.height * d; cx.setTransform(d, 0, 0, d, 0, 0); }
-  addEventListener("resize", taille); addEventListener("foudre", taille); taille();
-  // un éclair · une ligne brisée par déplacements successifs du milieu, avec une branche de temps en temps
-  function arc(x1, y1, x2, y2, ecart){
+
+  // le carrousel · la flèche avance d'une carte et disparaît au bout
+  var rail = document.getElementById("sec-rail"), suiv = document.getElementById("sec-suiv");
+  if (rail && suiv){
+    suiv.addEventListener("click", function(){ var c = rail.querySelector(".secteur"); rail.scrollBy({ left: c.offsetWidth + 14, behavior: calme ? "auto" : "smooth" }); });
+    var bout = function(){ suiv.toggleAttribute("data-fin", rail.scrollLeft + rail.clientWidth >= rail.scrollWidth - 8); };
+    rail.addEventListener("scroll", bout, { passive: true }); bout();
+  }
+
+  var boite = mot.querySelector(".foudre-mot"), txt = boite.textContent;
+  boite.innerHTML = txt.split("").map(function(c){ return '<span class="lt" aria-hidden="true">' + c + '</span>'; }).join("");
+  var lettres = [].slice.call(boite.children), L = lettres.length;
+  if (calme){ lettres.forEach(function(l){ l.setAttribute("data-on", ""); }); return; }
+
+  var cv = mot.querySelector("canvas"), cx = cv.getContext("2d"), vu = false, charge = 0, plein = false, allumees = 0, dernier = 0, eclairs = [], centres = [];
+  function taille(){ var r = cv.getBoundingClientRect(), d = Math.min(2, devicePixelRatio || 1); cv.width = r.width * d; cv.height = r.height * d; cx.setTransform(d, 0, 0, d, 0, 0);
+    centres = lettres.map(function(l){ var b = l.getBoundingClientRect(); return { x: b.left - r.left + b.width / 2, g: b.left - r.left, d: b.right - r.left, h: b.top - r.top + b.height * .18, b: b.bottom - r.top - b.height * .12, m: b.top - r.top + b.height * .55 }; }); }
+  addEventListener("resize", taille); addEventListener("foudre", taille);
+  new IntersectionObserver(function(es){ vu = es[0].isIntersecting; if (vu){ taille(); requestAnimationFrame(tour); } }).observe(mot);
+
+  // la charge suit le défilement · le mot entre en bas de l'écran éteint, il est plein quand il passe le premier tiers
+  function lire(){ if (plein) return; var r = mot.getBoundingClientRect(), H = innerHeight;
+    charge = Math.max(0, Math.min(1, (H * .92 - r.top) / (H * .55)));
+    var n = Math.round(charge * L);
+    if (n !== allumees){ lettres.forEach(function(l, k){ l.toggleAttribute("data-on", k < n); }); allumees = n; }
+    if (charge >= 1){ plein = true; mot.setAttribute("data-plein", ""); flash(); } }
+  addEventListener("scroll", lire, { passive: true }); lire();
+
+  function flash(){ mot.setAttribute("data-flash", ""); setTimeout(function(){ mot.removeAttribute("data-flash"); }, 90); }
+  // un éclair · ligne brisée par déplacement du milieu, plus ou moins nerveuse
+  function arc(x1, y1, x2, y2, ecart, prof){
     var pts = [[x1, y1], [x2, y2]];
-    for (var n = 0; n < 6; n++){ var nv = [pts[0]]; for (var k = 1; k < pts.length; k++){ var a = pts[k-1], b = pts[k];
-      nv.push([(a[0]+b[0])/2 + (Math.random()-.5) * ecart * .4, (a[1]+b[1])/2 + (Math.random()-.5) * ecart]); nv.push(b); } pts = nv; ecart *= .55; }
+    for (var n = 0; n < (prof || 6); n++){ var nv = [pts[0]]; for (var k = 1; k < pts.length; k++){ var a = pts[k-1], b = pts[k];
+      nv.push([(a[0]+b[0])/2 + (Math.random()-.5) * ecart * .35, (a[1]+b[1])/2 + (Math.random()-.5) * ecart]); nv.push(b); } pts = nv; ecart *= .55; }
     return pts;
   }
-  function trace(pts, l, a){ cx.beginPath(); cx.moveTo(pts[0][0], pts[0][1]); for (var k = 1; k < pts.length; k++) cx.lineTo(pts[k][0], pts[k][1]);
-    cx.strokeStyle = "rgba(255,45,111," + (a * .55) + ")"; cx.lineWidth = l * 5; cx.stroke();
-    cx.strokeStyle = "rgba(255,255,255," + a + ")"; cx.lineWidth = l; cx.stroke(); }
+  function trace(pts, l, a){
+    cx.beginPath(); cx.moveTo(pts[0][0], pts[0][1]); for (var k = 1; k < pts.length; k++) cx.lineTo(pts[k][0], pts[k][1]);
+    cx.shadowBlur = 18; cx.strokeStyle = "rgba(255,45,111," + (a * .5) + ")"; cx.lineWidth = l * 6; cx.stroke();
+    cx.shadowBlur = 8; cx.strokeStyle = "rgba(255,170,205," + (a * .8) + ")"; cx.lineWidth = l * 2.2; cx.stroke();
+    cx.shadowBlur = 0; cx.strokeStyle = "rgba(255,255,255," + a + ")"; cx.lineWidth = l * .9; cx.stroke();
+  }
+  function etincelle(x, y, a){ var g = cx.createRadialGradient(x, y, 0, x, y, 26); g.addColorStop(0, "rgba(255,255,255," + a + ")"); g.addColorStop(.25, "rgba(255,120,170," + a * .7 + ")"); g.addColorStop(1, "rgba(255,45,111,0)"); cx.fillStyle = g; cx.beginPath(); cx.arc(x, y, 26, 0, 7); cx.fill(); }
   function tour(t){
     if (!vu) return; requestAnimationFrame(tour);
-    var W = cv.clientWidth, H = cv.clientHeight;
-    if (t - dernier > 70 + Math.random() * 90){ dernier = t;
-      bruit.setAttribute("seed", Math.floor(Math.random() * 99));
-      if (Math.random() < .55){ var y = H * (.3 + Math.random() * .4), x1 = W * Math.random() * .5, x2 = x1 + W * (.2 + Math.random() * .5);
-        eclairs.push({ p: arc(x1, y, Math.min(W, x2), H * (.25 + Math.random() * .5), H * .5), v: 1, l: 1 + Math.random() * 1.4 });
-        if (Math.random() < .35){ mot.setAttribute("data-flash", ""); setTimeout(function(){ mot.removeAttribute("data-flash"); }, 60); } }
+    var W = cv.clientWidth, H = cv.clientHeight; if (!centres.length) return;
+    cx.clearRect(0, 0, W, H); cx.lineJoin = "round"; cx.shadowColor = "#ff2d6f";
+    if (!plein){
+      // pendant la charge · un arc court du début du mot jusqu'au front, et une étincelle au front
+      if (allumees > 0){ var f = centres[allumees - 1], x0 = centres[0].g, y0 = centres[0].m;
+        var fx = f.d + 4, fy = f.m + (Math.random() - .5) * f.m * .3;
+        trace(arc(x0, y0, fx, fy, H * .35, 7), 1.3, .95);
+        if (Math.random() < .6) trace(arc(x0, y0 + (Math.random() - .5) * 20, fx, fy, H * .5, 6), .7, .55);
+        etincelle(fx, fy, .9);
+        lettres.forEach(function(l, k){ l.toggleAttribute("data-vibre", k === allumees - 1 && Math.random() < .5); });
+      }
+      return;
     }
-    cx.clearRect(0, 0, W, H); cx.lineJoin = "round"; cx.shadowColor = "#ff2d6f"; cx.shadowBlur = 12;
-    eclairs = eclairs.filter(function(e){ e.v -= .09; if (e.v <= 0) return false; trace(e.p, e.l, e.v * (Math.random() < .2 ? .4 : 1)); return true; });
+    // le mot est plein · il grésille pour de bon · des arcs sautent d'une lettre à l'autre, un grand éclair de temps en temps
+    if (t - dernier > 90 + Math.random() * 160){ dernier = t;
+      var a = Math.floor(Math.random() * L), b = Math.min(L - 1, a + 1 + Math.floor(Math.random() * 3)), haut = Math.random() < .5, A = centres[a], B = centres[b];
+      eclairs.push({ p: arc(A.x, haut ? A.h : A.b, B.x, haut ? B.h : B.b, H * .25, 5), v: 1, l: .8 + Math.random() * .7 });
+      if (Math.random() < .12){ eclairs.push({ p: arc(centres[0].g - 6, centres[0].m, centres[L-1].d + 6, centres[L-1].m, H * .6, 7), v: 1, l: 1.5 }); flash(); }
+      var lv = lettres[Math.floor(Math.random() * L)]; lv.setAttribute("data-vibre", ""); setTimeout(function(){ lv.removeAttribute("data-vibre"); }, 80);
+    }
+    eclairs = eclairs.filter(function(e){ e.v -= .07; if (e.v <= 0) return false; trace(e.p, e.l, e.v * (Math.random() < .15 ? .35 : 1)); return true; });
   }
 })();
 </script>
