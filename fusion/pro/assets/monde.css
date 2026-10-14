@@ -1,0 +1,353 @@
+/* L'ACCUEIL « UN QR · TOUS LES MONDES » · 10/10/2026
+   Maquette GPT de Rayan refaite en code, référence Nothing (blanc pur, encre,
+   UN accent, beaucoup d'air mais tenu), reprise le soir même sur ses retours ·
+   une photo derrière le titre · les avantages tout de suite (les portes) ·
+   plus de police à points ni d'étiquettes mono · plus de grappes de pixels.
+   Posée APRÈS vitrine.css, sur les seules pages `monde` · tout est préfixé
+   .m- ou cadré par body[data-page].
+   🔴 Jamais de crème · jamais de cartes blanches à coches · jamais de picto
+   générique · une fonction se montre par son vrai écran.
+   ⚠️ Le rose porte de l'ENCRE, pas du blanc · blanc sur #ff2d6f fait 3,59:1,
+   assez pour un titre Anton, jamais pour une phrase. Un bouton rose à texte
+   blanc reste à 19 px gras (le seuil AA des grands textes, 18,66 px). */
+
+body[data-page] {
+  --m-blanc: #ffffff;
+  --m-gris: #f3f3f2;
+  --m-trait: #e4e4e2;
+  --m-encre: #0a0a0a;
+  --m-encre-2: #0a0a0a;
+  background: var(--m-blanc);
+  color: var(--m-encre);
+}
+body[data-page] main > .t-jour,
+body[data-page] main > .t-creux,
+body[data-page] main > .bloc--creux { background: var(--m-blanc); }
+
+/* L'en-tête rose du reste du site passe au blanc ici · encre et accent.
+   ⚠️ Aucun backdrop-filter · il ferait de l'en-tête le bloc conteneur du menu
+   (position: fixed), qui ne s'ouvrirait plus en plein écran. */
+body[data-page] .tete { background: #fff; color: var(--m-encre); --encre: #141215; --creux: #f1efe8; --ligne: var(--m-trait); }
+body[data-page] .tete.est-defile { border-bottom-color: var(--m-trait); }
+body[data-page] .tete .marque { color: var(--m-encre); }
+body[data-page] .tete .marque svg path[fill="#ff2d6f"] { fill: var(--accent); }
+body[data-page] .tete .nav a[aria-current="page"] { color: var(--m-encre); }
+body[data-page] .tete .menu > summary { border-color: var(--m-trait); }
+
+/* ── Les briques ─────────────────────────────────────────────────── */
+.m-bloc { padding-block: clamp(52px, 9vw, 120px); }
+.m-bloc--serre { padding-block: clamp(48px, 6vw, 80px); }
+.m-tete { max-width: 760px; margin-bottom: clamp(28px, 4vw, 48px); }
+.m-tete h2, .m-fin h2 {
+  margin: 0; font-family: var(--fa); font-weight: 400; font-size: var(--t-h2);
+  line-height: 1; text-transform: uppercase; text-wrap: balance;
+}
+/* Une capitale accentuée (À · É · Ô) monte au-dessus de la ligne · le
+   générateur pose h--accents, on lui laisse son interligne. */
+.m-tete h2.h--accents, .m-fin h2.h--accents { line-height: 1.14; }
+.m-tete h2 em, .m-fin h2 em { font-style: normal; color: var(--accent); }
+.m-chapo { font-size: var(--t-gros); line-height: 1.45; color: var(--m-encre-2); max-width: 40ch; margin: 14px 0 0; text-wrap: pretty; }
+
+.m-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; }
+.m-bouton {
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  min-height: 54px; padding: 0 24px; border-radius: 999px;
+  font-family: var(--fd); font-weight: 800; font-size: 19px;
+  text-decoration: none; transition: transform 0.12s var(--ease);
+}
+.m-bouton:active { transform: scale(0.97); }
+.m-bouton svg { width: 21px; height: 21px; flex: none; }
+.m-bouton--rose { background: var(--accent); color: #fff; box-shadow: 0 4px 0 var(--accent-socle); }
+.m-bouton--rose:active { box-shadow: 0 1px 0 var(--accent-socle); transform: translateY(3px); }
+.m-bouton--verre { color: #fff; box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.55); background: rgba(255, 255, 255, 0.08); }
+.m-bouton--clair { background: #fff; color: var(--m-encre); margin-top: 28px; }
+.m-bouton:focus-visible, .m-porte:focus-visible, .m-onglets a:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+
+/* Le téléphone · un objet, le relief va sur lui et jamais sur le texte. */
+.m-tel {
+  position: relative; aspect-ratio: 960 / 2081; width: 100%;
+  padding: 3.2%; border-radius: 15% / 7%;
+  background: linear-gradient(145deg, #2c2c2f, #0d0d0f 60%, #232326);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.22) inset, 0 30px 60px -24px rgba(0, 0, 0, 0.5), 0 8px 18px -8px rgba(0, 0, 0, 0.3);
+}
+.m-tel-ecran { width: 100%; height: 100%; border-radius: 12% / 5.6%; overflow: hidden; background: #fff; }
+.m-tel-ecran img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; }
+.m-video { display: block; width: 100%; height: auto; }
+.m-video::-webkit-media-controls-start-playback-button { display: none !important; -webkit-appearance: none; }
+
+.m-lien { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; margin-top: 14px; font-weight: 800; font-size: 16px; color: var(--m-encre); text-decoration: none; }
+.m-lien svg { width: 18px; height: 18px; color: var(--accent); transition: transform 0.2s var(--ease); }
+.m-lien:hover svg { transform: translateX(4px); }
+
+/* ── Le héros · une vraie table, le titre posé dessus ────────────── */
+.m-heros { position: relative; isolation: isolate; color: #fff; background: #0b0a0d; overflow: hidden; }
+.m-heros-fond { position: absolute; inset: 0; z-index: -1; }
+.m-heros-fond .scene, .m-heros-fond picture { display: block; width: 100%; height: 100%; margin: 0; border-radius: 0; }
+.m-heros-fond img { width: 100%; height: 100%; object-fit: cover; object-position: 24% 62%; }
+.m-heros-fond::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(8, 8, 10, 0.55) 0%, rgba(8, 8, 10, 0.35) 30%, rgba(8, 8, 10, 0.88) 78%, #0b0a0d 100%);
+}
+.m-heros-film { display: none; }
+.m-heros-grille { min-height: calc(92svh - var(--tete-h)); display: grid; align-items: end; padding-top: calc(var(--tete-h) + 40px); padding-bottom: 26px; }
+.m-surtitre { margin: 0; font-weight: 800; font-size: 14px; letter-spacing: 0.08em; text-transform: uppercase; color: #fff; display: inline-flex; align-items: center; gap: 10px; }
+.m-surtitre::before { content: ""; width: 10px; height: 10px; border-radius: 2px; background: var(--accent); }
+.m-h1 {
+  margin: 14px 0 0; font-family: var(--fa); font-weight: 400;
+  font-size: clamp(2.22rem, 0.74rem + 6.66vw, 4.884rem); line-height: 1.06;
+  text-transform: uppercase; text-wrap: balance;
+}
+.m-h1 span { display: block; }
+.m-h1 em { font-style: normal; color: var(--accent); }
+.m-heros-chapo { margin: 16px 0 0; font-size: var(--t-gros); line-height: 1.4; font-weight: 600; max-width: 30ch; color: #fff; }
+.m-preuves { list-style: none; margin: 22px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px 18px; }
+.m-preuves li { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; font-size: 15px; color: #fff; }
+.m-preuves li::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+.m-pour a { color: inherit; text-decoration: none; display: inline-flex; align-items: center; min-height: 32px; border-bottom: 1px solid rgba(255, 255, 255, 0.35); }
+.m-pour a:hover { color: #fff; border-bottom-color: var(--accent); }
+.m-pour { display: flex; flex-wrap: wrap; gap: 4px 22px; position: relative; margin: 0 auto; padding-top: 18px; padding-bottom: 22px; border-top: 1px solid rgba(255, 255, 255, 0.16); font-weight: 700; font-size: 14px; letter-spacing: 0.06em; text-transform: uppercase; color: #fff; }
+
+/* ── La différence · un PDF contre votre lieu ─────────────────────── */
+.m-pourquoi .m-tete { margin-inline: auto; text-align: center; }
+.m-pourquoi .m-tete h2 em { display: block; }
+.m-duel { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; max-width: 700px; margin: 0 auto; align-items: start; }
+.m-duel-cote { margin: 0; display: grid; gap: 10px; justify-items: center; align-content: start; text-align: center; }
+.m-duel-visuel { width: 100%; max-width: 280px; display: grid; justify-items: center; }
+/* Le film d'ouverture · le téléphone occupe 93 % de son cadre, le PDF dessiné se cale dessus. */
+.m-duel-film { width: 100%; aspect-ratio: 480 / 1020; }
+.m-tel--pdf { width: 92%; margin: 5.5% 0; filter: saturate(0); box-shadow: 0 30px 50px -28px rgba(0, 0, 0, 0.35); }
+.m-pdf { position: absolute; inset: 0; overflow: hidden; background: #e7e7ea; }
+.m-tel--pdf .m-tel-ecran { background: #e7e7ea; }
+/* Une page de menu trop petite, qu'on a zoomée · des traits gris, aucun mot. */
+.m-pdf-page { position: absolute; left: -18%; top: 16%; width: 150%; padding: 9% 8%; background: #fff; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12); display: grid; gap: 9px; transform: rotate(-1.5deg); }
+.m-pdf-page i { display: block; height: 7px; border-radius: 2px; background: #cfcfd4; }
+.m-pdf-page i:nth-child(1) { height: 16px; width: 55%; background: #a9a9b0; margin-bottom: 8px; }
+.m-pdf-page i:nth-child(3n) { width: 72%; }
+.m-pdf-page i:nth-child(3n+1) { width: 88%; }
+.m-pdf-page i:nth-child(5n) { height: 11px; width: 40%; background: #b9b9bf; margin-top: 10px; }
+.m-duel figcaption { display: grid; gap: 8px; justify-items: center; }
+.m-duel figcaption b { font-family: var(--fa); font-weight: 400; font-size: clamp(1.036rem, 0.74rem + 1.184vw, 1.628rem); line-height: 1; text-transform: uppercase; }
+.m-duel-cote--pdf figcaption b { color: #6b6b72; }
+.m-duel figcaption span { font-size: 15px; line-height: 1.35; color: var(--m-encre-2); max-width: 22ch; }
+/* Le coup de surligneur · un trait rose qui se pose derrière « LaTable », s'efface et revient.
+   Le trait est un FOND derrière le mot · le texte, lui, ne bouge jamais. */
+.m-surligne { position: relative; z-index: 0; background: none; color: inherit; padding: 0 0.12em; }
+.m-surligne::before {
+  content: ""; position: absolute; z-index: -1; left: -0.04em; right: -0.04em; top: 0.12em; bottom: -0.02em;
+  background: var(--accent); border-radius: 0.18em 0.32em 0.22em 0.4em; transform: rotate(-1.5deg) scaleX(1); transform-origin: left center;
+  animation: m-surligne 4.2s var(--ease) infinite;
+}
+@keyframes m-surligne {
+  0% { transform: rotate(-1.5deg) scaleX(0); opacity: 1; }
+  18%, 78% { transform: rotate(-1.5deg) scaleX(1); opacity: 1; }
+  92%, 100% { transform: rotate(-1.5deg) scaleX(1); opacity: 0; }
+}
+.m-duel figcaption ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
+.m-duel figcaption li { padding: 5px 10px; border-radius: 999px; background: var(--m-encre); color: #fff; font-weight: 800; font-size: 13px; }
+
+/* ── Les portes · une grille asymétrique, le produit en grand ────── */
+.m-portes { display: grid; gap: 12px; grid-template-columns: 1fr 1fr; }
+.m-porte {
+  position: relative; display: flex; flex-direction: column; overflow: hidden;
+  border-radius: 26px; text-decoration: none; color: var(--m-encre); background: var(--m-gris);
+  transition: transform 0.25s var(--ease);
+}
+.m-porte:hover { transform: translateY(-3px); }
+.m-porte--grand { grid-column: span 2; }
+.m-porte-texte { padding: 24px 22px 0; }
+.m-porte-sur { margin: 0; padding-right: 56px; font-weight: 800; font-size: 13px; letter-spacing: 0.07em; text-transform: uppercase; color: var(--m-encre-2); }
+.m-porte-titre { margin: 6px 0 0; font-family: var(--fa); font-weight: 400; font-size: clamp(2.146rem, 1.184rem + 3.404vw, 3.552rem); line-height: 0.95; text-transform: uppercase; }
+.m-porte--clair .m-porte-titre { font-size: clamp(1.05rem, 0.7rem + 1.6vw, 2.1rem); }
+.m-porte-ligne { margin: 10px 0 0; font-size: 17px; line-height: 1.4; font-weight: 600; max-width: 26ch; color: var(--m-encre-2); }
+.m-porte-fleche { position: absolute; top: 20px; right: 20px; display: grid; place-items: center; width: 46px; height: 46px; border-radius: 50%; background: var(--m-encre); color: #fff; }
+.m-porte--clair .m-porte-fleche { width: 40px; height: 40px; top: 14px; right: 12px; }
+.m-porte-fleche svg { width: 20px; height: 20px; transition: transform 0.2s var(--ease); }
+.m-porte:hover .m-porte-fleche svg { transform: translateX(3px); }
+.m-porte-visuel { position: relative; margin-top: auto; }
+/* Le téléphone détouré sort du bas de la porte · on en voit le haut, en grand. */
+.m-porte-visuel--tel { height: 236px; overflow: hidden; display: flex; justify-content: center; padding-top: 22px; }
+.m-porte-visuel--tel .m-tel { width: 56%; max-width: 262px; flex: none; align-self: flex-start; }
+.m-porte-visuel--tel > img { display: block; width: 64%; max-width: 300px; height: auto; align-self: flex-start; filter: drop-shadow(0 24px 30px rgba(0, 0, 0, 0.18)); }
+.m-porte-visuel--carte { padding: 14px 12px; }
+.m-porte-visuel--carte img { display: block; width: 100%; height: auto; border-radius: 12px; box-shadow: 0 16px 30px -18px rgba(0, 0, 0, 0.45); }
+.m-porte--clair .m-porte-texte { padding: 18px 14px 0; }
+/* 11/10 · le titre d'une petite case ne passe plus sous la flèche. */
+.m-porte--clair .m-porte-titre { white-space: nowrap; }
+.m-porte-visuel--carte img { max-width: 100%; }
+.m-porte--clair .m-porte-ligne { font-size: 14px; }
+.m-porte--clair .m-porte-sur { font-size: 11px; padding-right: 44px; }
+
+/* ── La démonstration · un téléphone collé, l'écran suit l'étape ─── */
+.m-demo { background: #0b0a0d !important; color: #fff; }
+.m-demo-pas { list-style: none; margin: 0; padding: 0; display: grid; gap: 40px; }
+.m-demo-n { display: block; font-family: var(--fa); font-size: 16.28px; line-height: 1; color: var(--accent); letter-spacing: 0.04em; }
+.m-demo-pas h3 { margin: 6px 0 0; font-family: var(--fa); font-weight: 400; font-size: clamp(1.48rem, 0.962rem + 2.22vw, 2.812rem); line-height: 1; text-transform: uppercase; }
+.m-demo-pas p { margin: 8px 0 0; font-size: 16px; line-height: 1.4; color: #fff; max-width: 30ch; }
+.m-lien--nuit { color: #fff; margin-top: 6px; }
+.m-demo-tel { box-shadow: 0 1px 0 rgba(255, 255, 255, 0.22) inset, 0 0 0 1px rgba(255, 255, 255, 0.08), 0 40px 80px -30px rgba(255, 45, 111, 0.35); }
+.m-demo-ecran { position: absolute; inset: 0; }
+.m-demo-ecran img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; }
+/* L'avis Google · la vraie carte posée sur l'écran blanc. */
+.m-demo-ecran--carte { display: grid; place-items: center; padding: 0 4%; background: #f6f6f7; }
+.m-demo-ecran--carte img { height: auto; border-radius: 10px; box-shadow: 0 18px 30px -16px rgba(0, 0, 0, 0.35); }
+.m-tel-ecran { position: relative; }
+/* Sans JS · chaque étape a SON téléphone, l'une sous l'autre. */
+.m-demo-collant { display: none; }
+.m-demo-seul { width: 58%; max-width: 260px; margin-top: 22px; }
+.m-demo-seul .m-demo-ecran { position: static; height: 100%; }
+/* Avec JS · un seul téléphone collé, les textes défilent dessous. */
+[data-demo-vivant] .m-demo-seul { display: none; }
+[data-demo-vivant] .m-demo-collant {
+  display: flex; justify-content: center; position: sticky; z-index: 2;
+  top: calc(var(--tete-h) + 8px); height: 50svh; padding-bottom: 14px;
+  background: #0b0a0d;
+}
+/* Un fondu SOUS le téléphone collé · le texte qui remonte s'y efface au lieu d'être coupé net. */
+[data-demo-vivant] .m-demo-collant::after { content: ""; position: absolute; left: 0; right: 0; top: 100%; height: 40px; background: linear-gradient(180deg, #0b0a0d, rgba(11, 10, 13, 0)); pointer-events: none; }
+[data-demo-vivant] .m-demo-collant .m-lien--nuit { color: #fff; margin-top: 6px; }
+.m-demo-tel { height: 100%; width: auto; }
+[data-demo-vivant] .m-demo-collant .m-demo-ecran { opacity: 0; transition: opacity 0.45s var(--ease); }
+[data-demo-vivant] .m-demo-collant .m-demo-ecran[data-actif] { opacity: 1; }
+[data-demo-vivant] .m-demo-pas { gap: 0; }
+[data-demo-vivant] .m-demo-pas li { min-height: 20svh; padding: 14px 0 18px; }
+/* L'étape qu'on ne lit pas s'estompe par son TITRE seul (≥ 3:1 en grand) · la phrase garde son contraste. */
+[data-demo-vivant] .m-demo-pas li h3 { color: rgba(255, 255, 255, 0.45); transition: color 0.3s; }
+[data-demo-vivant] .m-demo-pas li[data-actif] h3 { color: #fff; }
+/* Une étape lue s'efface · elle ne traîne pas sous le téléphone collé. */
+@media (max-width: 899px) { [data-demo-vivant] .m-demo-pas li[data-passe] { visibility: hidden; } }
+[data-demo-vivant] .m-demo-pas li:last-child { min-height: 28svh; }
+
+/* ── Les métiers · un seul à la fois, l'onglet choisit ───────────── */
+.m-onglets {
+  position: sticky; top: calc(var(--tete-h) + 6px); z-index: 5;
+  display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none;
+  margin: 0 calc(var(--marge) * -1); padding: 10px var(--marge);
+  background: rgba(255, 255, 255, 0.96);
+}
+.m-onglets::-webkit-scrollbar { display: none; }
+.m-onglets a {
+  flex: none; display: inline-flex; align-items: center; min-height: 46px; padding: 0 20px;
+  border-radius: 999px; box-shadow: inset 0 0 0 1.5px var(--m-trait);
+  font-weight: 800; font-size: 16px; color: var(--m-encre); text-decoration: none;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+}
+.m-onglets a[aria-current="true"] { background: var(--m-encre); color: #fff; box-shadow: none; }
+.m-metier {
+  scroll-margin-top: calc(var(--tete-h) + 80px);
+  display: grid; gap: 22px; padding: 30px 0 10px;
+  grid-template-areas: "tete" "scene" "liste";
+}
+.avec-js .m-metier[data-replie] { display: none; }
+.m-metier-tete { grid-area: tete; }
+.m-metier-pour { display: flex; flex-wrap: wrap; gap: 2px 16px; margin: 0; font-weight: 800; font-size: 13px; letter-spacing: 0.07em; text-transform: uppercase; color: var(--m-encre-2); }
+.m-metier-titre { margin: 8px 0 0; font-family: var(--fa); font-weight: 400; font-size: clamp(2.072rem, 1.184rem + 3.7vw, 3.7rem); line-height: 0.95; text-transform: uppercase; }
+.m-metier-slogan { margin: 6px 0 0; font-family: var(--fa); font-size: clamp(1.2rem, 0.95rem + 1.2vw, 1.7rem); line-height: 1.1; text-transform: uppercase; color: var(--accent); text-wrap: balance; }
+/* La photo du lieu derrière, le téléphone devant · un seul visuel. */
+/* Photo et téléphone dans la MÊME case de grille · la case prend la hauteur du
+   plus grand des deux, rien ne déborde sur la liste. */
+.m-metier-scene { grid-area: scene; display: grid; grid-template: 1fr / 1fr; }
+.m-metier-photo { grid-area: 1 / 1; justify-self: start; align-self: start; margin: 0; border-radius: 18px; overflow: hidden; aspect-ratio: 4 / 3; width: 76%; background: var(--m-gris); }
+.m-metier-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.m-metier-tel { grid-area: 1 / 1; justify-self: end; align-self: start; margin-top: 34px; width: 40%; max-width: 230px; z-index: 2; }
+.m-metier-tel-2 { display: none; }
+/* Le film détouré · le téléphone y occupe 93 % de la largeur, d'où un cadre un peu plus large que le téléphone en code. */
+.m-metier-tel--video { width: 47%; max-width: 250px; margin-top: 22px; aspect-ratio: 480 / 1020; }
+.m-metier-liste { grid-area: liste; }
+.m-metier-liste ul { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--m-trait); }
+.m-metier-liste li { display: flex; align-items: baseline; gap: 12px; padding: 13px 0; border-bottom: 1px solid var(--m-trait); font-weight: 600; font-size: 16px; line-height: 1.35; }
+.m-metier-liste li::before { content: ""; flex: none; width: 8px; height: 8px; border-radius: 2px; background: var(--accent); transform: translateY(-1px); }
+
+/* ── Les offres · trois cartes, sans coches ──────────────────────── */
+.m-offres {
+  display: grid; grid-auto-flow: column; grid-auto-columns: 84%; gap: 12px;
+  overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none;
+  margin: 0 calc(var(--marge) * -1); padding: 4px var(--marge) 10px; scroll-padding-inline: var(--marge);
+}
+.m-offres::-webkit-scrollbar { display: none; }
+.m-offre { scroll-snap-align: start; }
+.m-offre { display: flex; flex-direction: column; padding: 22px 22px 22px; border-radius: 26px; background: var(--m-gris); }
+.m-offre--phare { background: #fff; box-shadow: inset 0 0 0 2px var(--accent), 0 30px 60px -36px rgba(255, 45, 111, 0.45); }
+.m-offre-haut { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.m-offre-conseil { margin: 0; padding: 5px 12px; border-radius: 999px; background: var(--accent); color: var(--m-encre); font-weight: 800; font-size: 13px; }
+.m-offre-nom { margin: 0; font-family: var(--fd); font-weight: 800; font-size: 1.25rem; }
+.m-offre-prix { margin: 10px 0 0; display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.m-offre-prix b { font-family: var(--fa); font-weight: 400; font-size: clamp(2.516rem, 1.776rem + 2.072vw, 3.404rem); line-height: 1; font-variant-numeric: tabular-nums; }
+.m-offre-prix span { font-weight: 700; color: var(--m-encre-2); }
+.m-offre-mise { margin: 8px 0 0; font-weight: 700; font-size: 15px; color: var(--m-encre); }
+.m-offre-mise span { display: block; font-weight: 600; color: var(--m-encre-2); }
+.m-offre-promesse { margin: 14px 0 18px; padding-top: 14px; border-top: 1px solid var(--m-trait); font-size: 17px; line-height: 1.35; color: var(--m-encre-2); max-width: 30ch; }
+.m-offre .m-bouton { margin-top: auto; align-self: stretch; }
+.m-bouton--encre { background: var(--m-encre); color: #fff; }
+
+/* ── La fin ──────────────────────────────────────────────────────── */
+.m-fin { background: #0b0a0d !important; color: #fff; position: relative; overflow: hidden; }
+.m-fin .m-chapo { color: #fff; }
+.m-fin-grille { display: grid; gap: 36px; position: relative; }
+.m-fin-qr { position: relative; height: 210px; }
+.m-carte-qr { position: absolute; width: 150px; padding: 14px; background: #fff; border-radius: 18px; box-shadow: 0 30px 50px -20px rgba(0, 0, 0, 0.6); }
+.m-carte-qr img { display: block; width: 100%; height: auto; }
+.m-carte-qr--1 { left: 6%; top: 30px; transform: rotate(-10deg); }
+.m-carte-qr--2 { left: 42%; top: 0; transform: rotate(7deg); }
+
+/* ── Ordinateur ──────────────────────────────────────────────────── */
+@media (min-width: 900px) {
+  .m-heros-fond img { object-position: 50% 55%; }
+  .m-heros-fond::after { background: linear-gradient(90deg, rgba(8, 8, 10, 0.9) 0%, rgba(8, 8, 10, 0.6) 45%, rgba(8, 8, 10, 0.15) 75%), linear-gradient(180deg, transparent 70%, #0b0a0d 100%); }
+  .m-heros-grille { min-height: min(760px, calc(100svh - var(--tete-h))); align-items: center; grid-template-columns: 1.3fr 1fr; gap: 40px; padding-bottom: 40px; }
+  .m-h1 { font-size: clamp(4rem, 1rem + 5vw, 6.4rem); }
+  /* Le produit dès le premier écran · le film du resto, détouré, à droite du titre. */
+  .m-heros-film { display: block; justify-self: center; width: min(100%, 330px); aspect-ratio: 480 / 1020; filter: drop-shadow(0 30px 50px rgba(0, 0, 0, 0.5)); }
+
+  .m-pourquoi .m-tete { max-width: 1100px; }
+  .m-duel { gap: 60px; }
+  .m-duel-visuel { max-width: 320px; }
+
+  .m-portes { grid-template-columns: repeat(12, 1fr); gap: 16px; }
+  .m-porte { min-height: 500px; }
+  .m-porte--jouer { grid-column: span 7; }
+  .m-porte--commander { grid-column: span 5; }
+  .m-porte--avis { grid-column: span 5; }
+  .m-porte--revenir { grid-column: span 7; }
+  .m-porte-texte { padding: 34px 34px 0; }
+  .m-porte-titre { font-size: clamp(2.3rem, 0.9rem + 1.9vw, 3.3rem); }
+  .m-porte-visuel--tel { height: 380px; padding-top: 30px; }
+  .m-porte-visuel--tel > img { width: auto; height: 720px; max-width: none; }
+  .m-porte-visuel--tel .m-tel { width: 300px; max-width: none; }
+  .m-porte--clair { min-height: 0; }
+  .m-porte--clair .m-porte-texte { padding: 30px 30px 0; }
+  .m-porte--clair .m-porte-ligne { font-size: 16px; }
+  .m-porte--clair .m-porte-sur { font-size: 13px; padding-right: 0; }
+  .m-porte-visuel--carte { padding: 24px 30px 30px; }
+  .m-porte--revenir .m-porte-visuel--carte img { max-width: 520px; }
+
+  .m-demo-corps[data-demo-vivant] { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; }
+  [data-demo-vivant] .m-demo-collant { grid-column: 2; grid-row: 1; top: calc(var(--tete-h) + (100vh - var(--tete-h) - min(640px, 76vh)) / 2); height: min(640px, 76vh); padding: 0; background: none; }
+  [data-demo-vivant] .m-demo-pas { grid-column: 1; grid-row: 1; }
+  [data-demo-vivant] .m-demo-pas li { min-height: 62vh; display: flex; flex-direction: column; justify-content: center; padding: 0; }
+  [data-demo-vivant] .m-demo-pas li:last-child { min-height: 62vh; }
+  .m-demo-pas h3 { font-size: clamp(3rem, 1rem + 3vw, 4.6rem); }
+  .m-demo-pas p { font-size: 19px; }
+
+  .m-metier {
+    grid-template-columns: 1fr 1fr; grid-template-areas: "tete liste" "scene liste";
+    column-gap: 60px; padding: 40px 0 10px;
+  }
+  .m-metier-photo { width: 78%; aspect-ratio: 5 / 4; }
+  .m-metier-tel { width: 38%; margin-top: 60px; }
+  .m-metier-tel--video { width: 41%; margin-top: 44px; }
+  .m-metier-liste { align-self: center; }
+  .m-metier-liste li { font-size: 17px; padding: 16px 0; }
+
+  .m-offres { grid-auto-flow: row; grid-template-columns: repeat(3, 1fr); gap: 16px; overflow: visible; margin: 0; padding: 0; }
+  .m-offre { padding: 32px 30px 30px; }
+
+  .m-fin-grille { grid-template-columns: 1.2fr 1fr; align-items: center; }
+  .m-fin-qr { height: 280px; }
+  .m-carte-qr { width: 190px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .m-surligne::before { animation: none; }
+  .m-porte, .m-porte-fleche svg, .m-lien svg, .m-onglets a, [data-demo-vivant] .m-demo-collant .m-demo-ecran, [data-demo-vivant] .m-demo-pas li h3 { transition: none; }
+  .m-porte:hover { transform: none; }
+}
