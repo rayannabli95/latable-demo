@@ -2,10 +2,13 @@
 // Porté depuis docs/mondes/latable/demo/ le 14/10 · toutes les classes et les identifiants portent le préfixe r-
 
 // les traversées · { de: étape de départ (0 = 01), src } · le scroll les lit image par image
+// 14/10 · des SUITES D'IMAGES et plus des vidéos · sur iPhone Safari ne charge pas une
+// vidéo tant qu'on n'a pas touché l'écran, et un défilement ne compte pas comme un toucher.
+// 42 images par traversée, dessinées dans un canvas · la méthode des pages produit d'Apple.
 window.FILMS = [
-  { de: 1, src: "/latable-demo/fusion/pro/assets/recit/film/t1.mp4" },
-  { de: 2, src: "/latable-demo/fusion/pro/assets/recit/film/t2.mp4" },
-  { de: 3, src: "/latable-demo/fusion/pro/assets/recit/film/t3.mp4" }
+  { de: 1, dossier: "/latable-demo/fusion/pro/assets/recit/seq/t1/", n: 42 },
+  { de: 2, dossier: "/latable-demo/fusion/pro/assets/recit/seq/t2/", n: 42 },
+  { de: 3, dossier: "/latable-demo/fusion/pro/assets/recit/seq/t3/", n: 42 }
 ];
 
 
@@ -57,17 +60,26 @@ window.FILMS = [
   function film(k){
     if (films[k] || calme || econome) return;
     var f = (window.FILMS || []).filter(function(x){ return x.de === k; })[0]; if (!f) return;
-    var v = document.createElement("video"); v.muted = true; v.playsInline = true; v.preload = "auto"; v.tabIndex = -1; v.setAttribute("aria-hidden","true"); v.src = f.src;
-    decor.appendChild(v); films[k] = v;
+    var c = document.createElement("canvas"); c.width = 540; c.height = 945; c.setAttribute("aria-hidden", "true");
+    c._n = f.n; c._im = []; c._charge = 0; c._vu = -1;
+    for (var j = 1; j <= f.n; j++){ var im = new Image(); im.decoding = "async"; im.onload = function(){ c._charge++; }; im.src = f.dossier + (j < 10 ? "0" : "") + j + ".webp"; c._im.push(im); }
+    decor.appendChild(c); films[k] = c;
   }
-  var pret = function(v){ return v && v.readyState >= 2 && v.duration > 0; };
+  // une traversée ne se joue qu'une fois toutes ses images arrivées · sinon on garde le fondu
+  var pret = function(c){ return c && c._charge >= c._n; };
+  function dessiner(c, q){
+    var j = Math.round(q * (c._n - 1)); if (j === c._vu) return;
+    var im = c._im[j]; if (!im.complete || !im.naturalWidth) return;
+    c.getContext("2d").drawImage(im, 0, 0, c.width, c.height); c._vu = j;
+  }
 
   var lisse = function(a,b,x){ var t = Math.min(1, Math.max(0,(x-a)/(b-a))); return t*t*(3-2*t); };
   var max = 1, debut = 0, cible = 0, pos = 0, avant = 0;
   // la piste commence après l'ouverture · le scroll ne compte qu'à partir du moment où la scène se colle
-  function lire(){ cible = Math.max(0, Math.min(1, (scrollY - debut) / max)); }
-  function mesurer(){ debut = piste.getBoundingClientRect().top + scrollY - parseFloat(getComputedStyle(scene).top); max = Math.max(1, piste.offsetHeight - scene.offsetHeight); lire(); }
-  addEventListener("scroll", lire, { passive:true }); addEventListener("resize", mesurer); mesurer();
+  function lire(){ cible = Math.max(0, Math.min(1, (scrollY - debut) / max)); if (!isFinite(cible)) cible = 0; }
+  function mesurer(){ var haut = parseFloat(getComputedStyle(scene).top); if (!isFinite(haut)) haut = 0;   // Safari peut lire « auto » si la feuille arrive après le script
+    debut = piste.getBoundingClientRect().top + scrollY - haut; max = Math.max(1, piste.offsetHeight - scene.offsetHeight); lire(); }
+  addEventListener("scroll", lire, { passive:true }); addEventListener("resize", mesurer); addEventListener("load", mesurer); mesurer();
   var aller = function(k, u){ scrollTo({ top: debut + ((k + u) / N) * max, behavior: calme ? "auto" : "smooth" }); };
   var chapVu = -1;
   function chapitre(c){
@@ -107,9 +119,6 @@ window.FILMS = [
 
   // plus de calage automatique au repos du doigt · sur iPhone il se battait avec l'élan du défilement
   // (le repos d'une étape couvre 60 % de sa course · on s'y arrête sans aide)
-  addEventListener("touchend", function(){
-    for (var k in films) (function(v){ if (!v._ok){ var p = v.play(); if (p) p.then(function(){ v.pause(); v._ok = 1; }).catch(function(){}); } })(films[k]);
-  }, { passive:true });
 
   // la démo se joue · à l'étape 03 le visiteur vote sur le vrai écran et la table le compte
   var zones = [].slice.call(document.querySelectorAll(".r-zone-v")), vote = null, jVu = null;
@@ -120,13 +129,14 @@ window.FILMS = [
     var dt = Math.min(64, (t - avant) || 16); avant = t;
     pos += (cible - pos) * (calme ? 1 : 1 - Math.exp(-dt / 95));      // amorti indépendant de la cadence
     if (Math.abs(cible - pos) < .00002) pos = cible;
+    if (!isFinite(pos)) pos = cible;
     var x = pos * N, i = Math.min(N-1, Math.floor(x)), u = x - i, dernier = i === N-1;
     var suiv = Math.min(N-1, i+1), p = dernier ? 0 : lisse(REPOS, 1, u), bouge = DECOR[i] !== DECOR[suiv];
     film(i); film(i + 1);
 
     // le décor · image de repos, puis le film, puis l'image de repos suivante (qui est sa dernière image)
     var v = films[i], ok = bouge && pret(v);
-    if (ok){ var d = v.duration, tt = Math.min(d - .05, lisse(REPOS + .02, .98, u) * d); if (Math.abs(v.currentTime - tt) > .012) { try { v.currentTime = tt; } catch(e){} } }
+    if (ok) dessiner(v, lisse(REPOS + .02, .98, u));
     var oFilm = ok ? lisse(REPOS, REPOS + .03, u) * (1 - lisse(.975, .995, u)) : 0;
     for (var k in films) films[k].style.opacity = (+k === i) ? oFilm : 0;
     imgs.forEach(function(im, k){
